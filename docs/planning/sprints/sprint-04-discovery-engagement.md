@@ -2,7 +2,7 @@
 
 **Goal:** viewers find things fast and have reasons to return.
 **Requirements:** FR-C2, FR-C3, FR-C5, FR-E1, FR-E2, FR-C7 (if time), FR-C8
-**Dates:** TBD
+**Dates:** 2026-12-16 to 2026-12-29
 
 ## Tasks
 

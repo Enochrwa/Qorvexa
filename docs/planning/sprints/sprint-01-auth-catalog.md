@@ -2,7 +2,7 @@
 
 **Goal:** users can sign up, manage profiles and browse a seeded catalog; admins can manage metadata.
 **Requirements:** FR-A1, FR-A2, FR-A3, FR-C1, FR-S3 (metadata part), FR-S5, FR-C4 (basic)
-**Dates:** TBD
+**Dates:** 2026-11-04 to 2026-11-17
 
 ## Tasks
 
