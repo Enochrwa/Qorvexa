@@ -12,3 +12,4 @@ We record significant decisions so future contributors know the context and trad
 | [0006](0006-background-jobs-arq.md) | ARQ with Redis for background jobs | Accepted |
 | [0007](0007-player-hlsjs.md) | hls.js with custom React controls | Accepted |
 | [0008](0008-search-postgres-fts.md) | Postgres full-text and trigram search | Accepted |
+| [0009](0009-license-apache-2.md) | Apache-2.0 license | Proposed |
