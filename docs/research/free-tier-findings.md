@@ -73,3 +73,10 @@ Sources are official docs or provider announcements where possible. Re-verify be
 
 ## Verdict for Sprint 0
 $0 hosting of the **API + Postgres + Redis + worker** is possible only with compromises: cold starts (Render), 0.5 GB database (Neon), a command-capped Redis (Upstash) and no free background worker. No paid service has been added. Recorded in STATUS.md as decisions to approve.
+
+## Cloudinary Free (verified 2026-10-21)
+
+- 25 credits per month shared across storage, delivery bandwidth and transformations (1 credit = 1 GB storage, or 1 GB delivery, or 1,000 transformations). Video delivery is about 500 s SD or 250 s HD per GB. Limits are soft, but exceeding them can force an upgrade.
+- Implication: about 3 hours of SD total viewing per month if nearly all credits go to delivery. See ADR-0011.
+- Not verified: Free-plan max upload size; terms for streaming-platform use.
+- Sources: https://cloudinary.com/documentation/billing_and_plans, https://cloudinary.com/documentation/developer_onboarding_faq_credits

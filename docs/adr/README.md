@@ -14,3 +14,4 @@ We record significant decisions so future contributors know the context and trad
 | [0008](0008-search-postgres-fts.md) | Postgres full-text and trigram search | Accepted |
 | [0009](0009-license-apache-2.md) | Apache-2.0 license | Accepted |
 | [0010](0010-pilot-hosting-render-neon-redis.md) | Pilot hosting: Render, Neon, owner-managed Redis | Accepted |
+| [0011](0011-cloudinary-for-pilot-video.md) | Cloudinary for pilot video, posters, thumbnails | Accepted (capacity risk documented) |
