@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: qorvexa
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: qorvexa_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U qorvexa"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+    env:
+      DATABASE_URL: postgresql+asyncpg://qorvexa:ci@localhost:5432/qorvexa_test
+      REDIS_URL: redis://localhost:6379/0
+      JWT_SECRET: ci-secret
+      APP_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect backend
+        id: detect
+        run: |
+          if [ -f backend/pyproject.toml ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: astral-sh/setup-uv@v5
+        if: steps.detect.outputs.present == 'true'
+      - name: Install
+        if: steps.detect.outputs.present == 'true'
+        working-directory: backend
+        run: uv sync --frozen || uv sync
+      - name: Lint
+        if: steps.detect.outputs.present == 'true'
+        working-directory: backend
+        run: uv run ruff check . && uv run ruff format --check .
+      - name: Type check
+        if: steps.detect.outputs.present == 'true'
+        working-directory: backend
+        run: uv run mypy app
+      - name: Migrate and test
+        if: steps.detect.outputs.present == 'true'
+        working-directory: backend
+        run: |
+          uv run alembic upgrade head
+          uv run pytest --cov=app --cov-report=term-missing
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect frontend
+        id: detect
+        run: |
+          if [ -f frontend/package.json ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.present == 'true'
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm ci
+      - name: Lint and typecheck
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm run lint && npm run typecheck
+      - name: Unit tests
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm test -- --run
+      - name: Build
+        if: steps.detect.outputs.present == 'true'
+        working-directory: frontend
+        run: npm run build
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check markdown links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress "docs/**/*.md" "README.md"
+          fail: false
