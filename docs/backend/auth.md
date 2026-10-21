@@ -38,3 +38,14 @@ Playback authorization checks: title published, within availability window, prof
 - CSRF: refresh and logout endpoints require the cookie plus a custom header; CORS restricted to known origins.
 - Password policy: minimum length 10, check against common-password list; no composition rules.
 - Optional later: TOTP 2FA for admins, social login.
+
+## Implementation notes (Sprint 1)
+
+- Code: `backend/app/modules/auth/` (`security.py` pure helpers, `service.py` use cases, `deps.py` current user and `require_role`, `router.py` HTTP).
+- The role and account status are read from the database on every request, not from the JWT, so a demoted or suspended user loses access immediately. The `role` claim is informational.
+- Registration and forgot-password always return 202 and do the same work, so the API does not reveal which emails have accounts. Login returns one 401 for unknown user and wrong password.
+- Login for an unverified email returns 403. A completed password reset also marks the email verified (the link proved mailbox control) and signs out all sessions.
+- Cookie-authenticated endpoints (`/auth/refresh`, `/auth/logout`) require the header `X-Qorvexa-Client: web` in addition to the cookie. Cookie: `httpOnly`, `SameSite=Lax`, path `/api/v1/auth`, `Secure` when `COOKIE_SECURE=true` (required in production).
+- In `APP_ENV=production` the app refuses to start with the default or short `JWT_SECRET`.
+- Password deny-list is a small built-in set; replace with a larger list before the pilot.
+- Known gaps: no login lockout or rate limiting yet (separate Sprint 1 task); two browser tabs refreshing the same token at the same instant can trip reuse detection and sign the user out; no default profile is created at registration until the profiles task.

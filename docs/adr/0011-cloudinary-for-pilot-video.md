@@ -36,3 +36,15 @@ If 5 credits go to storage and 20 to video delivery: about 20 GB, roughly 10,000
 - Credentials (`CLOUDINARY_URL` or cloud name, API key, API secret) live only in environment variables; never committed.
 - Signed upload parameters are generated server-side; video bytes never pass through the FastAPI API.
 - Re-verify limits at the start of every sprint.
+
+## Update 2026-10-21: scope and usage guard
+
+- Cloudinary is for development and a tiny, invite-only pilot only. Do not assume the Free plan can serve tens or hundreds of viewers.
+- Before public launch, verify: upload-size limits, streaming-service terms, storage allowance and delivery cost. If the Free allowance is insufficient, present the customer with a cost estimate and get approval before upgrading.
+- The `VideoProvider` abstraction stays, so the provider can be switched without rewriting the application.
+- Usage guard (Sprint 2), built only if usage can be measured reliably from the Cloudinary Admin API:
+  - `CLOUDINARY_WARN_PERCENT` (default 70) shows a warning in the admin studio.
+  - `CLOUDINARY_BLOCK_PERCENT` (default 90) blocks new uploads.
+  - **Fail safe:** if usage data is unavailable or stale, new uploads are blocked and the admin sees why; playback is not affected.
+  - **These safeguards do not guarantee Cloudinary will never charge.** They only watch usage Cloudinary reports, which can lag; delivery by viewers is not something we can block per request. Paid overage or an upgrade still requires explicit owner and customer approval.
+- Credentials only in environment variables or the platform's secret manager; never in chat, commits, logs or docs.
