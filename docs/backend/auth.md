@@ -48,4 +48,22 @@ Playback authorization checks: title published, within availability window, prof
 - Cookie-authenticated endpoints (`/auth/refresh`, `/auth/logout`) require the header `X-Qorvexa-Client: web` in addition to the cookie. Cookie: `httpOnly`, `SameSite=Lax`, path `/api/v1/auth`, `Secure` when `COOKIE_SECURE=true` (required in production).
 - In `APP_ENV=production` the app refuses to start with the default or short `JWT_SECRET`.
 - Password deny-list is a small built-in set; replace with a larger list before the pilot.
-- Known gaps: no login lockout or rate limiting yet (separate Sprint 1 task); two browser tabs refreshing the same token at the same instant can trip reuse detection and sign the user out; no default profile is created at registration until the profiles task.
+- Known gaps: two browser tabs refreshing the same token at the same instant can trip reuse detection and sign the user out; no default profile is created at registration until the profiles task.
+
+## Rate limiting and lockout
+
+Code: `app/core/ratelimit.py` (limiter), `app/modules/auth/throttle.py` (the numbers). Fixed windows on Redis (atomic Lua script); keys hold a SHA-256 of the email, never the address.
+
+| Endpoint | Limit |
+|---|---|
+| register | 5 per hour per IP (429) |
+| verify-email | 20 per hour per IP |
+| login | 20 attempts per 15 min per IP; lockout after 5 failures per email+IP for 15 min; 30 failures per hour per email across all IPs |
+| refresh | 120 per hour per IP |
+| forgot password | 5 per hour per IP (429); max 3 emails per address per hour, extra requests still return 202 and send nothing |
+| reset password | 10 per hour per IP |
+
+- Failures are counted whether or not the account exists, so a lockout reveals nothing. A locked login is rejected even with the correct password until the window ends; a successful login clears the email+IP counter. Responses are problem+json 429 with `Retry-After`.
+- Lockout is per email+IP so an attacker cannot easily lock out a victim from everywhere; the per-email cap (30 per hour) still bounds distributed guessing.
+- **If Redis is unreachable** the limiter falls back to per-process memory for 10-second back-off periods and logs a warning. Limits stay on but are not shared across instances. It never disables limiting and never blocks all logins.
+- Client IP: `X-Forwarded-For` is ignored unless `TRUSTED_PROXY_COUNT` is set; then the entry added by the outermost trusted proxy is used (not the spoofable left side). On Render set `TRUSTED_PROXY_COUNT=1` after confirming how Render appends the header; otherwise all users behind the proxy would share one IP bucket.

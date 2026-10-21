@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 4, Sprint 1 auth slice)
+- **Last run:** 2026-10-21 (run 5, rate limiting and lockout)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,7 +37,7 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1: auth module, `require_role` and auth/authorization tests done (PR pending merge); rate limiting, profiles, catalog tasks todo. Full list: docs/planning/github-issues.md.
+Sprint 1: auth module, `require_role`, auth tests, rate limiting and login lockout done; profiles and catalog tasks todo. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
@@ -67,4 +67,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the auth PR when CI is green. Next slice: rate limiting and login lockout on `/auth/*` (Redis, owner-managed), then profiles CRUD and the catalog models. No paid infrastructure is needed for any of these.
+Merge the rate-limiting PR when CI is green. Next slice: profiles CRUD (profile ownership and maturity limit, default profile at registration) and the catalog models and migrations. No paid infrastructure is needed.

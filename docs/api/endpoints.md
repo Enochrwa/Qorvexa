@@ -1,6 +1,6 @@
 # Endpoint catalog (v1 draft)
 
-Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user). All paths are served under `/api/v1`. Draft; the OpenAPI spec is the source of truth once implemented.
+Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user). All paths are served under `/api/v1`. Auth endpoints return `429` (problem+json with `Retry-After`) when limits are hit; see docs/backend/auth.md. Draft; the OpenAPI spec is the source of truth once implemented.
 
 ## Auth
 | Method | Path | Auth | Purpose |

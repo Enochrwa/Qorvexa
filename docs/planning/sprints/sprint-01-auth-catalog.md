@@ -7,14 +7,14 @@
 ## Tasks
 
 ### Backend
-- [x] Auth module: register, verify email, login, refresh rotation, logout, reset ([auth.md](../../backend/auth.md)) (L) (login lockout and per-IP/identifier rate limits are deferred to the rate-limiting task)
+- [x] Auth module: register, verify email, login, refresh rotation, logout, reset ([auth.md](../../backend/auth.md)) (L) (rate limits and lockout done in the rate-limiting task)
 - [x] Roles and dependencies (`require_role`) (S)
 - [ ] Profiles CRUD with maturity limit and prefs (M)
 - [ ] Catalog models and migrations: titles, seasons, episodes, genres, people (L)
 - [ ] Public catalog endpoints: list, detail, seasons, genres, filters, cursor pagination (L)
 - [ ] Admin catalog CRUD endpoints with validation (L)
 - [ ] Seed script (admin user, genres, sample titles) (M)
-- [ ] Rate limiting on auth endpoints (S)
+- [x] Rate limiting on auth endpoints (S) (plus login lockout)
 
 ### Frontend
 - [ ] Auth pages (login, register, verify, forgot/reset) with forms and validation (L)
@@ -36,6 +36,8 @@
 - Migration upgrade and downgrade both work in CI.
 
 ## Log
+
+- 2026-10-21: Rate limiting and login lockout on branch `feat/auth-rate-limiting` (Redis, in-process fallback). 56 backend tests green with real Postgres and Redis.
 
 - 2026-10-21: Auth module, `require_role` and tests on branch `feat/auth-and-roles`. 40 backend tests green against real Postgres (auth modules 96 to 100% line coverage). Rate limiting and login lockout not done yet.
 
