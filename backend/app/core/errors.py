@@ -22,6 +22,11 @@ class NotFound(DomainError):
     title = "Not found"
 
 
+class Unauthorized(DomainError):
+    status = 401
+    title = "Unauthorized"
+
+
 class Conflict(DomainError):
     status = 409
     title = "Conflict"
@@ -50,7 +55,10 @@ def _problem(
 def install_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(DomainError)
     async def _domain(request: Request, exc: DomainError) -> JSONResponse:
-        return _problem(request, exc.status, exc.title, exc.detail)
+        resp = _problem(request, exc.status, exc.title, exc.detail)
+        if exc.status == 401:
+            resp.headers["WWW-Authenticate"] = "Bearer"
+        return resp
 
     @app.exception_handler(StarletteHTTPException)
     async def _http(request: Request, exc: StarletteHTTPException) -> JSONResponse:

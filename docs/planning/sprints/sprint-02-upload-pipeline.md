@@ -11,7 +11,7 @@
 - [ ] `LocalProvider` part 1: MinIO multipart presigned upload (M)
 - [ ] `LocalProvider` part 2: FFmpeg HLS ladder job in the worker (L)
 - [ ] `CloudinaryProvider`: signed direct upload, notification webhook verification, state mapping (L) (ADR-0011; Mux is now optional)
-- [ ] Cloudinary usage guard: Admin API usage, warn at 70%, block uploads at 90% (M)
+- [ ] Cloudinary usage guard: Admin API usage, thresholds configurable (default warn 70%, block uploads 90%), fail safe (block uploads) when usage is unavailable; build only if usage can be measured reliably; not a guarantee against charges (M) (ADR-0011)
 - [ ] Asset state machine with idempotent transitions (M)
 - [ ] ARQ worker setup; `reconcile_assets`, `cleanup_uploads` jobs (M)
 - [ ] Upload endpoints: create session, complete, status, retry (M)

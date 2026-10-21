@@ -7,8 +7,8 @@
 ## Tasks
 
 ### Backend
-- [ ] Auth module: register, verify email, login, refresh rotation, logout, reset ([auth.md](../../backend/auth.md)) (L)
-- [ ] Roles and dependencies (`require_role`) (S)
+- [x] Auth module: register, verify email, login, refresh rotation, logout, reset ([auth.md](../../backend/auth.md)) (L) (login lockout and per-IP/identifier rate limits are deferred to the rate-limiting task)
+- [x] Roles and dependencies (`require_role`) (S)
 - [ ] Profiles CRUD with maturity limit and prefs (M)
 - [ ] Catalog models and migrations: titles, seasons, episodes, genres, people (L)
 - [ ] Public catalog endpoints: list, detail, seasons, genres, filters, cursor pagination (L)
@@ -25,7 +25,7 @@
 - [ ] Admin studio shell and title/season/episode editor (L)
 
 ### Quality
-- [ ] Unit/integration tests per [backend testing](../../backend/testing.md) for auth and authorization (M)
+- [x] Unit/integration tests per [backend testing](../../backend/testing.md) for auth and authorization (M)
 - [ ] E2E: register -> create profile -> browse -> open title (M)
 
 ## Acceptance criteria
@@ -36,6 +36,8 @@
 - Migration upgrade and downgrade both work in CI.
 
 ## Log
+
+- 2026-10-21: Auth module, `require_role` and tests on branch `feat/auth-and-roles`. 40 backend tests green against real Postgres (auth modules 96 to 100% line coverage). Rate limiting and login lockout not done yet.
 
 -
 

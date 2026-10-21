@@ -1,17 +1,18 @@
 # Endpoint catalog (v1 draft)
 
-Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user). Draft; the OpenAPI spec is the source of truth once implemented.
+Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user). All paths are served under `/api/v1`. Draft; the OpenAPI spec is the source of truth once implemented.
 
 ## Auth
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| POST | /auth/register | - | Create account |
-| POST | /auth/verify-email | - | Verify with token |
+| POST | /auth/register | - | Create account; always 202, even if the email exists (no enumeration) |
+| POST | /auth/verify-email | - | Verify with token (204; single use) |
 | POST | /auth/login | - | Access token + refresh cookie |
-| POST | /auth/refresh | cookie | Rotate refresh, new access token |
-| POST | /auth/logout | V | Revoke refresh family |
-| POST | /auth/password/forgot | - | Request reset email |
-| POST | /auth/password/reset | - | Reset with token |
+| POST | /auth/refresh | cookie + `X-Qorvexa-Client: web` | Rotate refresh, new access token; reuse revokes the family |
+| POST | /auth/logout | V + `X-Qorvexa-Client: web` | Revoke refresh family, clear cookie (204) |
+| POST | /auth/password/forgot | - | Request reset email; always 202 |
+| POST | /auth/password/reset | - | Reset with token (204); signs out all sessions |
+| GET | /auth/me | V | Current user (id, email, role, email_verified) |
 | GET | /me | V | Current user |
 | DELETE | /me | V | Delete account |
 

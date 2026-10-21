@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 3, video/worker/customer decisions recorded)
+- **Last run:** 2026-10-21 (run 4, Sprint 1 auth slice)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,11 +37,12 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1 tasks: see docs/planning/github-issues.md (all todo).
+Sprint 1: auth module, `require_role` and auth/authorization tests done (PR pending merge); rate limiting, profiles, catalog tasks todo. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
 - D1: License = Apache-2.0 (ADR-0009, accepted).
+- D8: Cloudinary only for development and a tiny invite-only pilot; usage guard thresholds configurable, fails safe, no guarantee against charges (ADR-0011). Paid worker host and any paid plan need an approved budget; none selected.
 - D7: Video = Cloudinary Free (ADR-0011), replacing Mux for the pilot.
 - D4: Hosting = Render + Neon + owner-managed Redis (ADR-0010, accepted).
 - D2: Frontend pinned to ESLint 9 and TypeScript 5.9 because `eslint-plugin-jsx-a11y` and `openapi-typescript` do not yet support ESLint 10 / TypeScript 6+. Revisit when they do.
@@ -66,4 +67,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Sprint 1, first slice: auth module (register, login, refresh rotation with reuse detection) plus `require_role`, with tests. Blocked items: Q6, Q7, Q8 do not block Sprint 1.
+Merge the auth PR when CI is green. Next slice: rate limiting and login lockout on `/auth/*` (Redis, owner-managed), then profiles CRUD and the catalog models. No paid infrastructure is needed for any of these.
