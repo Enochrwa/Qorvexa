@@ -31,3 +31,7 @@ Define a `VideoProvider` interface. Implement `LocalProvider` (MinIO + FFmpeg, f
 ## Cost note (2026-10-21)
 
 Mux storage is billed per stored minute (about $0.003 per minute per month at the listed first-tier rate; about $1.80 per month per 10 hours of video). Delivery is free up to 100,000 minutes per month. Until the owner approves this spend, development and demos use `LocalProvider` (MinIO + FFmpeg) and Mux stays behind the interface.
+
+## Update 2026-10-21
+
+The owner chose Cloudinary (Free plan) for the pilot instead of Mux: see [ADR-0011](0011-cloudinary-for-pilot-video.md). The Mux cost note above no longer blocks anything; Mux remains an alternative.

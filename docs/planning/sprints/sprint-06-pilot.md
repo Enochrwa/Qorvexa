@@ -33,3 +33,10 @@ Review metrics against [vision](../../product/vision.md), re-rank the backlog, a
 ## Retro
 
 -
+
+## Launch gates (customer approval required before public launch)
+
+- [ ] Customer confirms content distribution rights (R4)
+- [ ] Customer confirms expected pilot traffic
+- [ ] Customer approves post-pilot infrastructure budget (video plan, worker host)
+- [ ] Worker-capable host selected and cost confirmed (ADR-0010 follow-up)

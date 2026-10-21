@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 2, decisions recorded)
+- **Last run:** 2026-10-21 (run 3, video/worker/customer decisions recorded)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -42,17 +42,23 @@ Sprint 1 tasks: see docs/planning/github-issues.md (all todo).
 ## Decisions made
 
 - D1: License = Apache-2.0 (ADR-0009, accepted).
+- D7: Video = Cloudinary Free (ADR-0011), replacing Mux for the pilot.
 - D4: Hosting = Render + Neon + owner-managed Redis (ADR-0010, accepted).
 - D2: Frontend pinned to ESLint 9 and TypeScript 5.9 because `eslint-plugin-jsx-a11y` and `openapi-typescript` do not yet support ESLint 10 / TypeScript 6+. Revisit when they do.
 - D3: GitHub labels, milestones (Sprints 0 to 6) and 31 issues (Sprints 0 and 1) were created on GitHub; docs/planning/github-issues.md mirrors them.
 
 ## Open questions (answerable in one line)
 
-1. Q6: Approve Mux storage spend (about $1.80 per month per 10 hours of video) for the pilot, or stay on LocalProvider (MinIO + FFmpeg)? ADR-0003.
-2. Q7: Where will the ARQ worker run for the pilot (Render has no free worker; Redis is yours)?
-3. Q8: The customer still has to confirm the recorded answers, especially content rights and post-pilot budget.
+1. Q9: Cloudinary Free allows roughly 3 hours of total SD viewing per month (ADR-0011). Keep the pilot invite-only and tiny, or ask the customer to fund a plan before public launch?
+2. Q10: Please confirm the Free plan's max upload size and streaming terms on your Cloudinary dashboard once the account exists (I could not verify them).
+3. Q11: Create a Cloudinary account and give me credentials as environment variables only (never in chat).
 
-Resolved 2026-10-21: license Apache-2.0 (ADR-0009), Render + Neon + owner-managed Redis (ADR-0010), branch protection approved, customer answers recorded in risks-and-open-questions.md.
+Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cloudinary Free (ADR-0011), ARQ worker, customer confirmation process (below).
+
+## Decisions on workers and customer sign-off
+
+- D5: ARQ worker runs locally with Redis during development and testing, as a separate process from FastAPI. Before the public pilot, choose a worker-capable host and confirm its cost (no free Render worker). Not decided yet: the host.
+- D6: The recorded customer answers stay proposed defaults. Explicit customer approval is required before public launch for: content distribution rights, expected pilot traffic, and the post-pilot infrastructure budget. Tracked as a launch gate in Sprint 6.
 
 ## Remaining for Phase 1 (closed with one caveat)
 
