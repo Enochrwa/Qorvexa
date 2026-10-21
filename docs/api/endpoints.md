@@ -1,6 +1,6 @@
 # Endpoint catalog (v1 draft)
 
-Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user). All paths are served under `/api/v1`. Auth endpoints return `429` (problem+json with `Retry-After`) when limits are hit; see docs/backend/auth.md. Draft; the OpenAPI spec is the source of truth once implemented.
+Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user: 400 if missing, 404 if not owned). All paths are served under `/api/v1`. Auth endpoints return `429` (problem+json with `Retry-After`) when limits are hit; see docs/backend/auth.md. Draft; the OpenAPI spec is the source of truth once implemented.
 
 ## Auth
 | Method | Path | Auth | Purpose |
@@ -19,10 +19,10 @@ Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (
 ## Profiles
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| GET | /profiles | V | List profiles |
-| POST | /profiles | V | Create profile |
-| PATCH | /profiles/{id} | V | Update (prefs, maturity) |
-| DELETE | /profiles/{id} | V | Delete profile |
+| GET | /profiles | V | List the account's profiles |
+| POST | /profiles | V | Create profile (max 5 per account; 409 at the cap or on a duplicate name) |
+| PATCH | /profiles/{id} | V | Partial update; unknown fields and nulls are 422; another account's profile is 404 |
+| DELETE | /profiles/{id} | V | Delete profile (409 if it is the only one) |
 | PUT | /profiles/{id}/taste | V | Save onboarding genres/titles |
 
 ## Catalog

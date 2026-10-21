@@ -51,3 +51,5 @@ Still unconfirmed by the customer: content rights (R4), post-pilot budget (R1).
 - Audience is mainly on mobile networks in East Africa.
 - Pilot size is small (tens to low hundreds of viewers).
 - English plus at least one local language for UI/subtitles (to confirm).
+
+Maturity scale (ADR-0012) is a working default; the customer should confirm it or give the classification to use before launch.

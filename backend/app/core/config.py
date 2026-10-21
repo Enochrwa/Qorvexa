@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     email_from: str = "no-reply@qorvexa.local"
     # Number of trusted reverse proxies in front of the app (Render = 1). 0 ignores X-Forwarded-For.
     trusted_proxy_count: int = 0
+    max_profiles_per_account: int = 5
     verify_email_ttl_hours: int = 24
     password_reset_ttl_hours: int = 1
 

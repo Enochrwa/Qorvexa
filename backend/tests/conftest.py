@@ -16,6 +16,7 @@ from app.core.ratelimit import Limiter, MemoryBackend, get_rate_limiter
 from app.main import create_app
 from app.modules.auth.deps import CurrentUser, require_role
 from app.modules.auth.email import get_email_sender
+from app.modules.profiles.deps import CurrentProfile, require_profile
 
 
 class FakeEmailSender:
@@ -52,6 +53,10 @@ def _wire_test_routes(app: FastAPI) -> None:
     @r.get("/admin")
     async def admin(u: CurrentUser = Depends(require_role("admin"))) -> dict[str, str]:  # noqa: B008
         return {"role": u.role}
+
+    @r.get("/profile-scoped")
+    async def scoped(p: CurrentProfile = Depends(require_profile)) -> dict[str, str]:  # noqa: B008
+        return {"id": str(p.id), "maturity_limit": p.maturity_limit}
 
     app.include_router(r)
 

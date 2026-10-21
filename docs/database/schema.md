@@ -19,7 +19,7 @@ media_assets 1─* subtitle_tracks        media_assets 1─* upload_sessions
 |---|---|
 | `users` | email (citext, unique), password_hash, role (`viewer|editor|admin`), status (`active|suspended|deleted`), email_verified_at |
 | `refresh_tokens` | user_id, family_id, token_hash (unique), expires_at, revoked_at, replaced_by |
-| `profiles` | user_id, name, avatar, language, maturity_limit, autoplay_next bool, data_saver bool, subtitle_prefs jsonb |
+| `profiles` | user_id, name (unique per user, case-insensitive), avatar (preset key `avatar-1..12`), language, maturity_limit (`all|7+|13+|16+|18+`), autoplay_next bool, data_saver bool, subtitle_prefs jsonb (`enabled`, `language`, `size`) |
 | `one_time_tokens` | user_id, purpose, token_hash, expires_at, used_at |
 
 ### Catalog

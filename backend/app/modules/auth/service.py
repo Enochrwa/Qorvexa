@@ -19,6 +19,7 @@ from app.modules.auth.security import (
     new_opaque_token,
     verify_password,
 )
+from app.modules.profiles.service import add_default_profile
 
 VERIFY = "verify_email"
 RESET = "password_reset"
@@ -47,8 +48,9 @@ async def register(session: AsyncSession, sender: EmailSender, email: str, passw
     existing = await session.scalar(select(User).where(User.email == email))
     if existing is not None:
         return
-    user = User(email=email, password_hash=password_hash)
+    user = User(id=uuid.uuid4(), email=email, password_hash=password_hash)
     session.add(user)
+    add_default_profile(session, user.id, email)
     try:
         await session.flush()
     except IntegrityError:  # concurrent registration of the same email
