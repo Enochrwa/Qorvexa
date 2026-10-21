@@ -25,3 +25,22 @@ Trunk-based: short-lived branches; releases tagged with SemVer; `CHANGELOG.md` g
 ## Free-tier considerations
 
 GitHub Actions free minutes are limited for private repos; cache dependencies, cancel redundant runs (already configured), run e2e less often.
+
+## Branch protection plan for `main` (exact settings)
+
+Apply under Settings → Branches → Add branch ruleset (or classic rule) for `main`. **Not applied automatically**; the owner must approve first.
+
+| Setting | Value |
+|---|---|
+| Require a pull request before merging | On, 0 required approvals while solo (raise to 1 when a second contributor joins) |
+| Dismiss stale approvals on new commits | On |
+| Require status checks to pass | On: `backend`, `frontend`, `docker`; `docs` is informational |
+| Require branches to be up to date before merging | On |
+| Require conversation resolution | On |
+| Require linear history | On (squash or rebase merge only) |
+| Block force pushes | On |
+| Restrict deletions | On |
+| Include administrators | On |
+| Require signed commits | Optional; off for now |
+
+Repository security settings to enable: Dependabot alerts and security updates, secret scanning and push protection, private vulnerability reporting, CodeQL default setup (free for public repos).

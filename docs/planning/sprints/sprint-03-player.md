@@ -2,7 +2,7 @@
 
 **Goal:** viewers play published content with a polished player; progress and resume work.
 **Requirements:** FR-P1 to FR-P6, FR-P4, NFR-2
-**Dates:** TBD
+**Dates:** 2026-12-02 to 2026-12-15
 
 ## Tasks
 

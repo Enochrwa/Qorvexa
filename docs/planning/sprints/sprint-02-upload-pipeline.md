@@ -2,13 +2,14 @@
 
 **Goal:** an admin can upload a video and see it become Ready, using the video provider abstraction.
 **Requirements:** FR-S1, FR-S2, FR-S4 (draft/publish), NFR-3, NFR-11
-**Dates:** TBD
+**Dates:** 2026-11-18 to 2026-12-01
 
 ## Tasks
 
 ### Backend
 - [ ] `VideoProvider` interface and `media_assets`, `upload_sessions`, `provider_events` models ([video-pipeline.md](../../architecture/video-pipeline.md)) (L)
-- [ ] `LocalProvider`: MinIO multipart presigned upload + FFmpeg HLS ladder in a worker (XL, split)
+- [ ] `LocalProvider` part 1: MinIO multipart presigned upload (M)
+- [ ] `LocalProvider` part 2: FFmpeg HLS ladder job in the worker (L)
 - [ ] `MuxProvider`: direct upload URL, webhook verification, state mapping (L)
 - [ ] Asset state machine with idempotent transitions (M)
 - [ ] ARQ worker setup; `reconcile_assets`, `cleanup_uploads` jobs (M)
@@ -18,7 +19,8 @@
 - [ ] Subtitle upload (SRT -> VTT) (M)
 
 ### Frontend
-- [ ] Upload studio: drag and drop, multiple files, per-file progress, pause/resume, retry (XL, split)
+- [ ] Upload studio part 1: drag and drop, multiple files, per-file progress (M)
+- [ ] Upload studio part 2: pause/resume and retry (M)
 - [ ] Asset status chips: Uploading / Processing / Ready / Failed with reason (S)
 - [ ] Preview player (basic `<video>` + hls.js) before publish (M)
 - [ ] Publish / unpublish actions (S)

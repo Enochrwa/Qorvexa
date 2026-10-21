@@ -2,7 +2,7 @@
 
 A web-based video-on-demand platform for movies and drama series: adaptive-bitrate streaming, an advanced player, downloads, personalized discovery and an admin studio for content upload and management.
 
-> **Status:** Planning and foundation (Sprint 0). No application code yet. See [docs/planning/roadmap.md](docs/planning/roadmap.md).
+> **Status:** Foundation (Sprint 0). Backend and frontend scaffolds exist; no product features yet. See [docs/planning/STATUS.md](docs/planning/STATUS.md). See [docs/planning/roadmap.md](docs/planning/roadmap.md).
 
 ## Product goals
 
@@ -57,12 +57,14 @@ Start at the [documentation index](docs/README.md).
 
 ```bash
 cp .env.example .env
+make install                # backend (uv) and frontend (npm) dependencies
 docker compose up -d        # Postgres, Redis, MinIO, Mailpit
+make migrate                # apply Alembic migrations
 make backend-dev            # FastAPI on :8000
 make frontend-dev           # Vite on :5173
 ```
 
-These commands become valid as Sprint 0 completes; see [docs/planning/sprints/sprint-00-foundation.md](docs/planning/sprints/sprint-00-foundation.md).
+The backend and frontend run today; compose and Docker images are verified in CI. Sprint 0 status: see [docs/planning/sprints/sprint-00-foundation.md](docs/planning/sprints/sprint-00-foundation.md).
 
 ## Content and legal
 

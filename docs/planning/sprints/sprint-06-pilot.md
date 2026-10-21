@@ -1,7 +1,7 @@
 # Sprint 6: Pilot readiness
 
 **Goal:** a small, safe public pilot and an honest cost report for the customer.
-**Dates:** TBD
+**Dates:** 2027-01-13 to 2027-01-26
 
 ## Tasks
 

@@ -2,7 +2,7 @@
 
 **Goal:** complete Launch scope and harden for the pilot.
 **Requirements:** FR-D1, NFR-1, NFR-4, NFR-5, NFR-10
-**Dates:** TBD
+**Dates:** 2026-12-30 to 2027-01-12
 
 ## Tasks
 
