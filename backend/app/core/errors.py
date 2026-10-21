@@ -27,6 +27,15 @@ class Unauthorized(DomainError):
     title = "Unauthorized"
 
 
+class TooManyRequests(DomainError):
+    status = 429
+    title = "Too many requests"
+
+    def __init__(self, retry_after: int, detail: str | None = None) -> None:
+        super().__init__(detail or "Too many requests. Try again later.")
+        self.retry_after = max(1, retry_after)
+
+
 class Conflict(DomainError):
     status = 409
     title = "Conflict"
@@ -58,6 +67,8 @@ def install_error_handlers(app: FastAPI) -> None:
         resp = _problem(request, exc.status, exc.title, exc.detail)
         if exc.status == 401:
             resp.headers["WWW-Authenticate"] = "Bearer"
+        if isinstance(exc, TooManyRequests):
+            resp.headers["Retry-After"] = str(exc.retry_after)
         return resp
 
     @app.exception_handler(StarletteHTTPException)

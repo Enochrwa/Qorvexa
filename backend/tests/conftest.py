@@ -12,6 +12,7 @@ os.environ.setdefault("JWT_SECRET", "test-secret-test-secret-test-secret-0123")
 
 from app.core.config import get_settings
 from app.core.db import get_session
+from app.core.ratelimit import Limiter, MemoryBackend, get_rate_limiter
 from app.main import create_app
 from app.modules.auth.deps import CurrentUser, require_role
 from app.modules.auth.email import get_email_sender
@@ -56,7 +57,13 @@ def _wire_test_routes(app: FastAPI) -> None:
 
 
 @pytest.fixture
-async def client(mailbox: FakeEmailSender) -> AsyncIterator[AsyncClient]:
+def limiter() -> Limiter:
+    """Fresh in-memory limiter per test, so tests never share counters or need Redis."""
+    return Limiter(None, MemoryBackend())
+
+
+@pytest.fixture
+async def client(mailbox: FakeEmailSender, limiter: Limiter) -> AsyncIterator[AsyncClient]:
     """App client with a per-test NullPool engine and a fake mailer."""
     app = create_app()
     _wire_test_routes(app)
@@ -69,6 +76,7 @@ async def client(mailbox: FakeEmailSender) -> AsyncIterator[AsyncClient]:
 
     app.dependency_overrides[get_session] = _session
     app.dependency_overrides[get_email_sender] = lambda: mailbox
+    app.dependency_overrides[get_rate_limiter] = lambda: limiter
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
         yield c
     await engine.dispose()

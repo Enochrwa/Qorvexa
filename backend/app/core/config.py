@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     smtp_host: str = "localhost"
     smtp_port: int = 1025
     email_from: str = "no-reply@qorvexa.local"
+    # Number of trusted reverse proxies in front of the app (Render = 1). 0 ignores X-Forwarded-For.
+    trusted_proxy_count: int = 0
     verify_email_ttl_hours: int = 24
     password_reset_ttl_hours: int = 1
 
