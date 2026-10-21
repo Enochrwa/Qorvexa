@@ -1,6 +1,6 @@
 # Risks and open questions
 
-## Open questions for the customer (blocking Sprint 2+)
+## Open questions for the customer (answers recorded 2026-10-21, see below)
 
 1. Content: does the customer own or have rights to all content? Any third-party licensed titles with territory/time limits?
 2. Launch target: demo only, small public pilot, or full production? Expected concurrent viewers?
@@ -12,6 +12,23 @@
 8. Target audience and geography (affects bandwidth assumptions, legal obligations, payment methods)?
 9. Domain: will the customer buy a custom domain?
 10. Who administers content day to day, and how many admins/editors?
+
+## Answers (recorded 2026-10-21, supplied by the project owner as proposed answers; customer to confirm)
+
+1. Content: the customer confirms ownership or distribution rights for every title, including any territory or time limits.
+2. Launch target: small public pilot, tens to low hundreds of viewers; concurrent usage tested before scaling.
+3. Library size: a small set of movies and drama episodes, expanded as storage and bandwidth allow.
+4. Budget: free tiers first. A sustainable monthly infrastructure budget must be agreed before public scaling.
+5. Downloads: selected authorized titles only, with quality options and data-saving limits.
+6. Monetization: free for the MVP. Ads, subscriptions and pay-per-view are later phases.
+7. Branding: name, logo and colors pending. English UI first; a local language after confirmation.
+8. Audience: Rwanda first, then wider East Africa; mobile-first, low data use.
+9. Domain: free deployment URL first; a custom domain only if the customer approves the cost.
+10. Administration: one primary administrator; restricted editor accounts if needed.
+
+Working assumptions confirmed: customer-owned or authorized content, East African mobile audience, limited pilot traffic and library, English UI first (Kinyarwanda and other subtitle languages to be evaluated), public launch depends on cost, rights and customer approval.
+
+Still unconfirmed by the customer: content rights (R4), post-pilot budget (R1).
 
 ## Risk register
 

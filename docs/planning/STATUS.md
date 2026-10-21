@@ -1,8 +1,8 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 1, Phase 1)
+- **Last run:** 2026-10-21 (run 2, decisions recorded)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
-- **Phase 1:** in progress (not done: see "Remaining for Phase 1")
+- **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
 
 ## Sprint calendar
@@ -21,7 +21,7 @@
 
 | Task | State |
 |---|---|
-| Protect `main`, secret scanning, Dependabot | blocked: config files added; applying repo settings needs owner approval (see docs/devops/ci-cd.md) |
+| Protect `main`, secret scanning, Dependabot | done (see run notes; settings per docs/devops/ci-cd.md) |
 | Backend scaffold | done (local checks green) |
 | Frontend scaffold | done (local checks green) |
 | Dockerfiles | done; both images build in CI (`docker` job green on PR #32) |
@@ -33,32 +33,31 @@
 | App shell, router, error boundary, query provider | done |
 | Design tokens, Button, Input, Skeleton | done |
 | OpenAPI client generation script | done (verified against an exported schema) |
-| Confirm customer inputs | blocked: needs customer (see questions) |
-| Finalize ADR-0003 | blocked: depends on customer inputs |
+| Confirm customer inputs | done: answers recorded; customer confirmation pending (Q8) |
+| Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
 Sprint 1 tasks: see docs/planning/github-issues.md (all todo).
 
 ## Decisions made
 
-- D1: License = Apache-2.0 (ADR-0009, proposed; change before first release if the customer needs ownership).
+- D1: License = Apache-2.0 (ADR-0009, accepted).
+- D4: Hosting = Render + Neon + owner-managed Redis (ADR-0010, accepted).
 - D2: Frontend pinned to ESLint 9 and TypeScript 5.9 because `eslint-plugin-jsx-a11y` and `openapi-typescript` do not yet support ESLint 10 / TypeScript 6+. Revisit when they do.
 - D3: GitHub labels, milestones (Sprints 0 to 6) and 31 issues (Sprints 0 and 1) were created on GitHub; docs/planning/github-issues.md mirrors them.
 
 ## Open questions (answerable in one line)
 
-1. Q1: Approve applying the `main` branch protection settings from docs/devops/ci-cd.md?
-2. Q2: Confirm Apache-2.0, or choose another license?
-3. Q3: ARQ would exceed Upstash's free 500K commands per month. Run Redis only locally/CI for now and decide queue strategy before Sprint 2?
-4. Q4: Customer inputs 1 to 10 in docs/planning/risks-and-open-questions.md are still unanswered.
-5. Q5: Which free host for the API (Render free sleeps after 15 min, no free worker) and Postgres (Neon free 0.5 GB)? Approve as the pilot candidates?
+1. Q6: Approve Mux storage spend (about $1.80 per month per 10 hours of video) for the pilot, or stay on LocalProvider (MinIO + FFmpeg)? ADR-0003.
+2. Q7: Where will the ARQ worker run for the pilot (Render has no free worker; Redis is yours)?
+3. Q8: The customer still has to confirm the recorded answers, especially content rights and post-pilot budget.
 
-## Remaining for Phase 1
+Resolved 2026-10-21: license Apache-2.0 (ADR-0009), Render + Neon + owner-managed Redis (ADR-0010), branch protection approved, customer answers recorded in risks-and-open-questions.md.
 
-- Apply branch protection after approval (Q1).
-- Verify `docker compose up -d` and `make backend-dev` end to end on a machine with Docker (compose was not run in the authoring sandbox).
-- Customer inputs and ADR-0003 finalization (blocked).
+## Remaining for Phase 1 (closed with one caveat)
+
+- Caveat: `docker compose up -d` and `make backend-dev` end to end were not run in the authoring sandbox (no Docker). CI builds both images and runs the backend against live Postgres and Redis. Owner to run compose once locally.
 
 ## Next action
 
-Get answers to Q1 to Q5, apply branch protection, run compose once locally, then mark Phase 1 done and start Sprint 1 with the auth module.
+Sprint 1, first slice: auth module (register, login, refresh rotation with reuse detection) plus `require_role`, with tests. Blocked items: Q6, Q7, Q8 do not block Sprint 1.

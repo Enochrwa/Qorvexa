@@ -1,6 +1,6 @@
 # ADR-0003: Video provider abstraction
 
-- Status: Proposed (pending customer inputs on content volume, launch target and budget)
+- Status: Abstraction accepted 2026-10-21 (customer inputs received: small pilot library, free tiers first). Use of paid Mux storage is NOT yet approved; see below.
 - Date: 2026-10-21
 
 ## Context
@@ -27,3 +27,7 @@ Define a `VideoProvider` interface. Implement `LocalProvider` (MinIO + FFmpeg, f
 - Provider changes do not touch the frontend or catalog.
 - Extra code for the abstraction and tests per provider.
 - Re-evaluate after the pilot using measured stored and delivered minutes.
+
+## Cost note (2026-10-21)
+
+Mux storage is billed per stored minute (about $0.003 per minute per month at the listed first-tier rate; about $1.80 per month per 10 hours of video). Delivery is free up to 100,000 minutes per month. Until the owner approves this spend, development and demos use `LocalProvider` (MinIO + FFmpeg) and Mux stays behind the interface.
