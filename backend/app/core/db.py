@@ -1,0 +1,37 @@
+"""Async SQLAlchemy engine and session factory."""
+
+from collections.abc import AsyncIterator
+
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.orm import DeclarativeBase
+
+from app.core.config import get_settings
+
+
+class Base(DeclarativeBase):
+    """Declarative base for all ORM models."""
+
+
+_engine: AsyncEngine | None = None
+_sessionmaker: async_sessionmaker[AsyncSession] | None = None
+
+
+def get_engine() -> AsyncEngine:
+    global _engine, _sessionmaker
+    if _engine is None:
+        _engine = create_async_engine(get_settings().database_url, pool_pre_ping=True)
+        _sessionmaker = async_sessionmaker(_engine, expire_on_commit=False)
+    return _engine
+
+
+async def get_session() -> AsyncIterator[AsyncSession]:
+    """FastAPI dependency: one session (unit of work) per request."""
+    get_engine()
+    assert _sessionmaker is not None  # noqa: S101 - set by get_engine
+    async with _sessionmaker() as session:
+        yield session
