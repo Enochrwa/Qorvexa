@@ -1,0 +1,7 @@
+{
+  "editor.formatOnSave": true,
+  "[python]": { "editor.defaultFormatter": "charliermarsh.ruff" },
+  "[typescript][typescriptreact][json][css]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
+  "typescript.tsdk": "frontend/node_modules/typescript/lib"
+}
