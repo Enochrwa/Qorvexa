@@ -48,7 +48,8 @@ Playback authorization checks: title published, within availability window, prof
 - Cookie-authenticated endpoints (`/auth/refresh`, `/auth/logout`) require the header `X-Qorvexa-Client: web` in addition to the cookie. Cookie: `httpOnly`, `SameSite=Lax`, path `/api/v1/auth`, `Secure` when `COOKIE_SECURE=true` (required in production).
 - In `APP_ENV=production` the app refuses to start with the default or short `JWT_SECRET`.
 - Password deny-list is a small built-in set; replace with a larger list before the pilot.
-- Known gaps: two browser tabs refreshing the same token at the same instant can trip reuse detection and sign the user out; no default profile is created at registration until the profiles task.
+- Registration also creates a default profile (`18+`) in the same transaction. Profile-scoped endpoints use `require_profile` (`app/modules/profiles/deps.py`).
+- Known gaps: two browser tabs refreshing the same token at the same instant can trip reuse detection and sign the user out.
 
 ## Rate limiting and lockout
 
