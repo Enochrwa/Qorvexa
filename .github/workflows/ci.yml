@@ -89,6 +89,15 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build backend image
+        run: docker build -f infra/docker/backend.Dockerfile -t qorvexa-api:ci .
+      - name: Build frontend image
+        run: docker build -f infra/docker/frontend.Dockerfile -t qorvexa-web:ci .
+
   docs:
     runs-on: ubuntu-latest
     steps:
