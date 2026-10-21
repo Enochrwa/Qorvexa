@@ -24,10 +24,10 @@
 | Protect `main`, secret scanning, Dependabot | blocked: config files added; applying repo settings needs owner approval (see docs/devops/ci-cd.md) |
 | Backend scaffold | done (local checks green) |
 | Frontend scaffold | done (local checks green) |
-| Dockerfiles | done, unverified locally (no Docker in sandbox); CI `docker` job builds them |
+| Dockerfiles | done; both images build in CI (`docker` job green on PR #32) |
 | `docker compose` and Makefile targets verified | in progress: Makefile targets run for backend and frontend; compose not run |
-| CI green on an empty PR | in progress: needs the PR to run |
-| Async session, Alembic initial migration | done; migration verified as SQL only, not on live Postgres until CI |
+| CI green on an empty PR | done: backend (live Postgres + Redis, migration applied), frontend, docker, docs all green on PR #32 |
+| Async session, Alembic initial migration | done; applied to live Postgres in CI |
 | Problem+JSON, request ID, logging | done |
 | Config via env, `.env.example` | done |
 | App shell, router, error boundary, query provider | done |
@@ -43,7 +43,7 @@ Sprint 1 tasks: see docs/planning/github-issues.md (all todo).
 
 - D1: License = Apache-2.0 (ADR-0009, proposed; change before first release if the customer needs ownership).
 - D2: Frontend pinned to ESLint 9 and TypeScript 5.9 because `eslint-plugin-jsx-a11y` and `openapi-typescript` do not yet support ESLint 10 / TypeScript 6+. Revisit when they do.
-- D3: GitHub labels, milestones and issues for Sprints 0 and 1 are tracked in docs/planning/github-issues.md (see run notes for whether they were also created on GitHub).
+- D3: GitHub labels, milestones (Sprints 0 to 6) and 31 issues (Sprints 0 and 1) were created on GitHub; docs/planning/github-issues.md mirrors them.
 
 ## Open questions (answerable in one line)
 
@@ -55,10 +55,10 @@ Sprint 1 tasks: see docs/planning/github-issues.md (all todo).
 
 ## Remaining for Phase 1
 
-- CI green on the PR (backend, frontend, docker), then merge.
 - Apply branch protection after approval (Q1).
-- Verify `docker compose up -d` and the Docker builds on a machine with Docker.
+- Verify `docker compose up -d` and `make backend-dev` end to end on a machine with Docker (compose was not run in the authoring sandbox).
+- Customer inputs and ADR-0003 finalization (blocked).
 
 ## Next action
 
-Open the PR, wait for CI, fix any failures (Docker build and Postgres migration are the untested parts), merge, then mark Phase 1 done and start Sprint 1 with the auth module.
+Get answers to Q1 to Q5, apply branch protection, run compose once locally, then mark Phase 1 done and start Sprint 1 with the auth module.
