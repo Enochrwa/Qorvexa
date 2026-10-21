@@ -1,6 +1,6 @@
 # ADR-0009: Apache-2.0 license
 
-- Status: Proposed (default chosen by the lead engineer; the owner can change it before the first release)
+- Status: Accepted (owner approved 2026-10-21)
 - Date: 2026-10-21
 - Deciders: Enochrwa
 
