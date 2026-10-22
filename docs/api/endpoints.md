@@ -1,6 +1,6 @@
 # Endpoint catalog (v1 draft)
 
-Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user: 400 if missing, 404 if not owned). All paths are served under `/api/v1`. Auth endpoints return `429` (problem+json with `Retry-After`) when limits are hit; see docs/backend/auth.md. Draft; the OpenAPI spec is the source of truth once implemented.
+Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user: 400 if missing, 404 if not owned). All paths are served under `/api/v1`. Catalog GETs return weak ETags (send `If-None-Match` for 304) and are limited to 120 per minute per IP. Auth endpoints return `429` (problem+json with `Retry-After`) when limits are hit; see docs/backend/auth.md. Draft; the OpenAPI spec is the source of truth once implemented.
 
 ## Auth
 | Method | Path | Auth | Purpose |
@@ -29,11 +29,11 @@ Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
 | GET | /home | P | Home rows (continue watching, recommended, collections) |
-| GET | /titles | - | Browse with filters |
-| GET | /titles/{slug} | - | Title detail |
-| GET | /titles/{slug}/seasons | - | Seasons and episodes |
+| GET | /titles | - (optional `X-Profile-Id`) | Browse: filters `type`, `genre`, `year`, `language`; `sort=added|name|year`; `limit` 1-50; `cursor`. Only visible titles (ADR-0013) |
+| GET | /titles/{slug} | - (optional `X-Profile-Id`) | Title detail with genres, cast and season count; hidden titles are 404 |
+| GET | /titles/{slug}/seasons | - (optional `X-Profile-Id`) | Seasons with published episodes |
 | GET | /titles/{slug}/related | - | Related titles |
-| GET | /genres | - | Genre list |
+| GET | /genres | - | Genre list (sorted by name) |
 | GET | /collections | - | Collections |
 | GET | /search?q= | - | Search titles and people |
 | GET | /search/suggest?q= | - | Autocomplete |

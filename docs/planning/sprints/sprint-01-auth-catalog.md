@@ -10,8 +10,8 @@
 - [x] Auth module: register, verify email, login, refresh rotation, logout, reset ([auth.md](../../backend/auth.md)) (L) (rate limits and lockout done in the rate-limiting task)
 - [x] Roles and dependencies (`require_role`) (S)
 - [x] Profiles CRUD with maturity limit and prefs (M) (default profile at registration; `X-Profile-Id` dependency added for profile-scoped endpoints)
-- [ ] Catalog models and migrations: titles, seasons, episodes, genres, people (L)
-- [ ] Public catalog endpoints: list, detail, seasons, genres, filters, cursor pagination (L)
+- [x] Catalog models and migrations: titles, seasons, episodes, genres, people (L)
+- [x] Public catalog endpoints: list, detail, seasons, genres, filters, cursor pagination (L) (ADR-0013; list p95 under 20 ms on 5,000 seeded titles, local Postgres)
 - [ ] Admin catalog CRUD endpoints with validation (L)
 - [ ] Seed script (admin user, genres, sample titles) (M)
 - [x] Rate limiting on auth endpoints (S) (plus login lockout)
@@ -36,6 +36,8 @@
 - Migration upgrade and downgrade both work in CI.
 
 ## Log
+
+- 2026-10-22: Catalog models, migration 0004 and public catalog endpoints on branch `feat/catalog`. Admin CRUD, seed script and frontend tasks remain.
 
 - 2026-10-21: Profiles CRUD, default profile at registration, `require_profile` dependency, maturity scale (ADR-0012) on branch `feat/profiles`. 83 backend tests green with real Postgres and Redis.
 

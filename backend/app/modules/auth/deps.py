@@ -14,7 +14,7 @@ from app.core.errors import Forbidden, Unauthorized
 from app.modules.auth.models import User
 from app.modules.auth.security import ROLE_RANK, decode_access_token
 
-_bearer = HTTPBearer(auto_error=False)
+bearer_scheme = HTTPBearer(auto_error=False)
 
 
 @dataclass(frozen=True)
@@ -26,7 +26,7 @@ class CurrentUser:
 
 
 async def get_current_user(
-    creds: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
+    creds: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> CurrentUser:
     """Authenticate from the bearer token; role and status come from the DB, not the token."""

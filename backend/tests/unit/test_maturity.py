@@ -27,3 +27,12 @@ def test_allows(limit: str, rating: str, expected: bool) -> None:
 )
 def test_unknown_values_fail_closed(limit: str, rating: str) -> None:
     assert allows(limit, rating) is False
+
+
+def test_allowed_ratings() -> None:
+    from app.modules.profiles.maturity import allowed_ratings
+
+    assert allowed_ratings("all") == ("all",)
+    assert allowed_ratings("13+") == ("all", "7+", "13+")
+    assert allowed_ratings("18+") == MATURITY_LEVELS
+    assert allowed_ratings("bogus") == ()  # fail closed

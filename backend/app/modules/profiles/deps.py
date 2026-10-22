@@ -4,12 +4,12 @@ import uuid
 from dataclasses import dataclass
 from typing import Annotated
 
-from fastapi import Depends, Header
+from fastapi import Depends, Header, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_session
 from app.core.errors import DomainError, NotFound
-from app.modules.auth.deps import CurrentUser, require_role
+from app.modules.auth.deps import CurrentUser, bearer_scheme, get_current_user, require_role
 from app.modules.profiles import service
 
 
@@ -32,6 +32,23 @@ async def require_profile(
 ) -> CurrentProfile:
     if not x_profile_id:
         raise MissingProfile("X-Profile-Id header is required")
+    try:
+        pid = uuid.UUID(x_profile_id)
+    except ValueError as exc:
+        raise NotFound("Profile not found") from exc
+    profile = await service.get_owned(session, user.id, pid)
+    return CurrentProfile(profile.id, profile.user_id, profile.maturity_limit)
+
+
+async def optional_profile(
+    request: Request,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_profile_id: Annotated[str | None, Header()] = None,
+) -> CurrentProfile | None:
+    """No header: anonymous/default. Header present: it must be a profile of the signed-in user."""
+    if not x_profile_id:
+        return None
+    user = await get_current_user(await bearer_scheme(request), session)
     try:
         pid = uuid.UUID(x_profile_id)
     except ValueError as exc:
