@@ -11,3 +11,9 @@ def allows(profile_limit: str, title_rating: str) -> bool:
     """
     limit, rating = _RANK.get(profile_limit), _RANK.get(title_rating)
     return limit is not None and rating is not None and rating <= limit
+
+
+def allowed_ratings(profile_limit: str) -> tuple[str, ...]:
+    """Ratings a profile may see, for SQL IN filters. Unknown limit -> nothing (fail closed)."""
+    limit = _RANK.get(profile_limit)
+    return () if limit is None else MATURITY_LEVELS[: limit + 1]

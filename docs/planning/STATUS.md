@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 6, profiles)
+- **Last run:** 2026-10-21 (run 7, catalog)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,12 +37,13 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD done; catalog and frontend tasks todo. Full list: docs/planning/github-issues.md.
+Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, seed script and the frontend tasks todo. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
 - D1: License = Apache-2.0 (ADR-0009, accepted).
 - D9: Maturity scale all < 7+ < 13+ < 16+ < 18+ (ADR-0012); customer to confirm.
+- D10: Catalog visibility rule, default anonymous limit `13+`, keyset pagination (ADR-0013).
 - D8: Cloudinary only for development and a tiny invite-only pilot; usage guard thresholds configurable, fails safe, no guarantee against charges (ADR-0011). Paid worker host and any paid plan need an approved budget; none selected.
 - D7: Video = Cloudinary Free (ADR-0011), replacing Mux for the pilot.
 - D4: Hosting = Render + Neon + owner-managed Redis (ADR-0010, accepted).
@@ -68,4 +69,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the profiles PR when CI is green. Next slice: catalog models and migrations (titles, seasons, episodes, genres) and the public catalog endpoints with maturity and availability filtering. No paid infrastructure is needed.
+Merge the catalog PR when CI is green. Next slice: admin catalog CRUD (editor/admin only, validation, slug uniqueness) and the seed script (admin user from environment variables, genres, sample titles). No paid infrastructure is needed.

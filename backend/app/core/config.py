@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     # Number of trusted reverse proxies in front of the app (Render = 1). 0 ignores X-Forwarded-For.
     trusted_proxy_count: int = 0
     max_profiles_per_account: int = 5
+    # Maturity limit for anonymous requests and requests without an X-Profile-Id (ADR-0013).
+    public_maturity_limit: str = "13+"
     verify_email_ttl_hours: int = 24
     password_reset_ttl_hours: int = 1
 

@@ -16,3 +16,4 @@ We record significant decisions so future contributors know the context and trad
 | [0010](0010-pilot-hosting-render-neon-redis.md) | Pilot hosting: Render, Neon, owner-managed Redis | Accepted |
 | [0011](0011-cloudinary-for-pilot-video.md) | Cloudinary for pilot video, posters, thumbnails | Accepted (capacity risk documented) |
 | [0012](0012-maturity-scale.md) | Age-based maturity scale | Accepted (working default) |
+| [0013](0013-catalog-visibility-and-pagination.md) | Catalog visibility, default audience limit, keyset pagination | Accepted (working default) |
