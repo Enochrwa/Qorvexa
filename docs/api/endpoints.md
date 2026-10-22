@@ -1,6 +1,6 @@
 # Endpoint catalog (v1 draft)
 
-Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user: 400 if missing, 404 if not owned). All paths are served under `/api/v1`. Catalog GETs return weak ETags (send `If-None-Match` for 304) and are limited to 120 per minute per IP. Auth endpoints return `429` (problem+json with `Retry-After`) when limits are hit; see docs/backend/auth.md. Draft; the OpenAPI spec is the source of truth once implemented.
+Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (requires `X-Profile-Id` belonging to the user: 400 if missing, 404 if not owned). All paths are served under `/api/v1`. Admin responses are `Cache-Control: no-store` and every mutation is written to `audit_log`. Catalog GETs return weak ETags (send `If-None-Match` for 304) and are limited to 120 per minute per IP. Auth endpoints return `429` (problem+json with `Retry-After`) when limits are hit; see docs/backend/auth.md. Draft; the OpenAPI spec is the source of truth once implemented.
 
 ## Auth
 | Method | Path | Auth | Purpose |
@@ -63,11 +63,15 @@ Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (
 ## Admin studio
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| GET/POST | /admin/titles | E | List/create |
-| GET/PATCH/DELETE | /admin/titles/{id} | E | Manage title |
-| POST | /admin/titles/{id}/publish | E | Publish or schedule |
+| GET/POST | /admin/titles | E | List (filters `status`, `q`, `limit`, `offset`) / create (new titles are `draft`, rating defaults to `18+`) |
+| GET/PATCH/DELETE | /admin/titles/{id} | E | Manage title. `slug`, `type` and `status` cannot be patched; delete requires unpublished (409 otherwise) |
+| POST | /admin/titles/{id}/publish | E | Publish; optional `publish_at` (future = embargoed, state `scheduled`) and `available_until`. 409 unless synopsis and poster exist |
 | POST | /admin/titles/{id}/unpublish | E | Unpublish |
-| CRUD | /admin/titles/{id}/seasons, /admin/seasons/{id}/episodes | E | Series structure |
+| GET/POST | /admin/titles/{id}/seasons | E | List (with all episodes) / create (series only) |
+| PATCH/DELETE | /admin/seasons/{id} | E | Update / delete season |
+| GET/POST | /admin/seasons/{id}/episodes | E | List / create episode |
+| POST | /admin/seasons/{id}/episodes/reorder | E | Renumber episodes 1..n from an ordered id list (atomic) |
+| PATCH/DELETE | /admin/episodes/{id} | E | Update (incl. `status`) / delete episode |
 | POST | /admin/media/uploads | E | Create upload session |
 | POST | /admin/media/uploads/{id}/complete | E | Mark upload complete |
 | GET | /admin/media/assets/{id} | E | Status and details |

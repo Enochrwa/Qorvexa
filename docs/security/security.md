@@ -22,7 +22,7 @@ Baseline: OWASP ASVS Level 1 for the pilot; aim for Level 2 controls on auth and
 - [ ] Security headers: CSP, HSTS, X-Content-Type-Options, Referrer-Policy, frame-ancestors
 - [ ] Upload: allowlist types, size caps, probe with `ffprobe`, process in isolated worker, never execute uploaded content
 - [ ] Secrets only in environment/secret manager
-- [ ] Audit log for admin actions (publish, delete, role change)
+- [x] Audit log for admin actions (title/season/episode create, update, delete, publish, unpublish; role changes will be logged when user management lands)
 
 **Infrastructure**
 - [ ] HTTPS only; modern TLS

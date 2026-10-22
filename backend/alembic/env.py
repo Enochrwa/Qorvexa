@@ -22,6 +22,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from app.core.config import get_settings  # noqa: E402
 from app.core.db import Base  # noqa: E402
+from app.modules.audit import models as _audit_models  # noqa: E402, F401
 from app.modules.auth import models as _auth_models  # noqa: E402, F401
 from app.modules.catalog import models as _catalog_models  # noqa: E402, F401
 from app.modules.profiles import models as _profile_models  # noqa: E402, F401

@@ -35,6 +35,11 @@ media_assets 1─* subtitle_tracks        media_assets 1─* upload_sessions
 | `collections` | name, slug, description, kind (`editorial|mood`), sort_order, is_active |
 | `collection_items` | collection_id, title_id, position |
 
+### Audit
+| Table | Key columns |
+|---|---|
+| `audit_log` | actor_id (nullable, set null if the account is deleted), action, entity_type, entity_id, detail jsonb (field names and identifiers only, never content or secrets), created_at |
+
 ### Media
 | Table | Key columns |
 |---|---|

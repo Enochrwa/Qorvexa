@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 7, catalog)
+- **Last run:** 2026-10-21 (run 8, admin catalog and seed)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,7 +37,7 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, seed script and the frontend tasks todo. Full list: docs/planning/github-issues.md.
+Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); only the Sprint 1 frontend tasks remain. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
@@ -69,4 +69,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the catalog PR when CI is green. Next slice: admin catalog CRUD (editor/admin only, validation, slug uniqueness) and the seed script (admin user from environment variables, genres, sample titles). No paid infrastructure is needed.
+Merge the admin PR when CI is green. Backend for Sprint 1 is complete, so next is the frontend: auth pages and token handling (in-memory access token, single-flight refresh), then the profile picker, browse page and title detail page. No paid infrastructure is needed. After that, Sprint 1 closes with E2E tests and the retro.
