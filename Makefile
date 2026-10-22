@@ -1,7 +1,7 @@
-.PHONY: help install up down backend-dev frontend-dev worker-dev migrate seed test lint fmt
+.PHONY: help install up down backend-dev frontend-dev worker-dev migrate seed gen-api test lint fmt
 
 help:
-	@echo "Targets: install up down backend-dev frontend-dev worker-dev migrate seed test lint fmt"
+	@echo "Targets: install up down backend-dev frontend-dev worker-dev migrate seed gen-api test lint fmt"
 
 install:
 	cd backend && uv sync
@@ -27,6 +27,9 @@ migrate:
 
 seed:  ## genres, admin from SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD, sample titles (dev only)
 	cd backend && uv run python -m app.cli.seed --sample
+
+gen-api:  ## regenerate frontend API types from the backend OpenAPI schema
+	./scripts/gen-api.sh
 
 test:
 	cd backend && uv run pytest
