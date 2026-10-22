@@ -1,7 +1,7 @@
-.PHONY: help install up down backend-dev frontend-dev worker-dev migrate test lint fmt
+.PHONY: help install up down backend-dev frontend-dev worker-dev migrate seed test lint fmt
 
 help:
-	@echo "Targets: install up down backend-dev frontend-dev worker-dev migrate test lint fmt"
+	@echo "Targets: install up down backend-dev frontend-dev worker-dev migrate seed test lint fmt"
 
 install:
 	cd backend && uv sync
@@ -24,6 +24,9 @@ frontend-dev:
 
 migrate:
 	cd backend && uv run alembic upgrade head
+
+seed:  ## genres, admin from SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD, sample titles (dev only)
+	cd backend && uv run python -m app.cli.seed --sample
 
 test:
 	cd backend && uv run pytest

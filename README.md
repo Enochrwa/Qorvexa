@@ -60,6 +60,7 @@ cp .env.example .env
 make install                # backend (uv) and frontend (npm) dependencies
 docker compose up -d        # Postgres, Redis, MinIO, Mailpit
 make migrate                # apply Alembic migrations
+make seed                   # genres + sample titles; admin only if SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD are set
 make backend-dev            # FastAPI on :8000
 make frontend-dev           # Vite on :5173
 ```

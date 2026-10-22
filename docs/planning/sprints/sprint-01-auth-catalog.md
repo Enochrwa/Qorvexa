@@ -12,8 +12,8 @@
 - [x] Profiles CRUD with maturity limit and prefs (M) (default profile at registration; `X-Profile-Id` dependency added for profile-scoped endpoints)
 - [x] Catalog models and migrations: titles, seasons, episodes, genres, people (L)
 - [x] Public catalog endpoints: list, detail, seasons, genres, filters, cursor pagination (L) (ADR-0013; list p95 under 20 ms on 5,000 seeded titles, local Postgres)
-- [ ] Admin catalog CRUD endpoints with validation (L)
-- [ ] Seed script (admin user, genres, sample titles) (M)
+- [x] Admin catalog CRUD endpoints with validation (L) (titles, seasons, episodes, reorder, publish/unpublish, audit log; poster/subtitle editing waits for media in Sprint 2)
+- [x] Seed script (admin user, genres, sample titles) (M) (`make seed`; admin only from SEED_ADMIN_* env vars)
 - [x] Rate limiting on auth endpoints (S) (plus login lockout)
 
 ### Frontend
@@ -36,6 +36,8 @@
 - Migration upgrade and downgrade both work in CI.
 
 ## Log
+
+- 2026-10-22: Admin catalog CRUD, audit log (migration 0005) and seed script on branch `feat/admin-catalog`. 136 backend tests green. All Sprint 1 backend tasks are done; frontend tasks remain.
 
 - 2026-10-22: Catalog models, migration 0004 and public catalog endpoints on branch `feat/catalog`. Admin CRUD, seed script and frontend tasks remain.
 

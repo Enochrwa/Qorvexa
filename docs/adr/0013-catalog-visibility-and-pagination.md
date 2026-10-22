@@ -22,3 +22,10 @@ Public catalog endpoints need a single, testable answer to "may this title be sh
 - A CDN cannot cache catalog JSON until the response is made audience-independent (for example by caching per maturity level). Revisit if traffic needs it; at pilot size it does not.
 - Cursors survive inserts and deletes without skipping rows; a title whose sort key changes between pages can still appear once or be missed once, which is acceptable for browse.
 - Changing the maturity scale needs a migration of `titles.maturity_rating` and `profiles.maturity_limit`.
+
+## Addendum 2026-10-22: publishing and scheduling
+
+- Publishing sets `status = 'published'`. A future `publish_at` is an embargo handled by the visibility rule itself, so no background job is needed; the admin API reports `state = scheduled` until then. `available_until` ends availability the same way (`state = expired`).
+- The `scheduled` status value is reserved and not set by the API.
+- A title can be published only with a synopsis and a poster. Requiring ready media is added in Sprint 2 when upload and processing exist.
+- Deleting a published title is refused; unpublish first. Deleting cascades to its seasons and episodes.
