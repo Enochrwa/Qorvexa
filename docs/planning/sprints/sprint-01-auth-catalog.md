@@ -17,8 +17,8 @@
 - [x] Rate limiting on auth endpoints (S) (plus login lockout)
 
 ### Frontend
-- [ ] Auth pages (login, register, verify, forgot/reset) with forms and validation (L)
-- [ ] Token handling: in-memory access token, refresh single-flight (M)
+- [x] Auth pages (login, register, verify, forgot/reset) with forms and validation (L)
+- [x] Token handling: in-memory access token, refresh single-flight (M)
 - [ ] Profile picker and management (M)
 - [ ] Browse page with filters, skeletons, responsive grid (L)
 - [ ] Title detail page: hero, synopsis, seasons/episodes list (L)
@@ -36,6 +36,8 @@
 - Migration upgrade and downgrade both work in CI.
 
 ## Log
+
+- 2026-10-22: Frontend auth pages and token handling on branch `feat/frontend-auth` (typed API client, 63 frontend tests, axe clean). Found and fixed a backend CORS bug (custom headers rejected on preflight) that mocked tests could not see; verified the client against the real backend.
 
 - 2026-10-22: Admin catalog CRUD, audit log (migration 0005) and seed script on branch `feat/admin-catalog`. 136 backend tests green. All Sprint 1 backend tasks are done; frontend tasks remain.
 

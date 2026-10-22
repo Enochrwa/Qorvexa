@@ -34,6 +34,7 @@ Start here. Everything needed to plan, build, test, deploy and operate Qorvexa l
 - [Coding standards (TypeScript/React)](frontend/coding-standards.md)
 - [Player specification](frontend/player-spec.md)
 - [Design system](frontend/design-system.md)
+- [Auth and API client](frontend/auth-and-api-client.md)
 - [State, data fetching and routing](frontend/state-and-data.md)
 - [Testing (frontend)](frontend/testing.md)
 

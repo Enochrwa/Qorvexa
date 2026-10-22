@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 8, admin catalog and seed)
+- **Last run:** 2026-10-21 (run 9, frontend auth)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,13 +37,14 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); only the Sprint 1 frontend tasks remain. Full list: docs/planning/github-issues.md.
+Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); frontend auth pages and token handling done; the profile picker, browse page, title detail page, admin studio and E2E remain. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
 - D1: License = Apache-2.0 (ADR-0009, accepted).
 - D9: Maturity scale all < 7+ < 13+ < 16+ < 18+ (ADR-0012); customer to confirm.
 - D10: Catalog visibility rule, default anonymous limit `13+`, keyset pagination (ADR-0013).
+- D11: Frontend stack pins: ESLint 9, TypeScript 5.9, `@hookform/resolvers` 5 (v6 has a peer conflict), MSW 3 (`onUnhandledFrame`). Revisit when upstream catches up.
 - D8: Cloudinary only for development and a tiny invite-only pilot; usage guard thresholds configurable, fails safe, no guarantee against charges (ADR-0011). Paid worker host and any paid plan need an approved budget; none selected.
 - D7: Video = Cloudinary Free (ADR-0011), replacing Mux for the pilot.
 - D4: Hosting = Render + Neon + owner-managed Redis (ADR-0010, accepted).
@@ -51,6 +52,8 @@ Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout 
 - D3: GitHub labels, milestones (Sprints 0 to 6) and 31 issues (Sprints 0 and 1) were created on GitHub; docs/planning/github-issues.md mirrors them.
 
 ## Open questions (answerable in one line)
+
+0. Q12: Sessions need the frontend and API on the same site. Approve a custom domain for the pilot (needs customer approval, Q9), or should I test a same-origin proxy on the free hosts first? See docs/frontend/auth-and-api-client.md.
 
 1. Q9: Cloudinary Free allows roughly 3 hours of total SD viewing per month (ADR-0011). Keep the pilot invite-only and tiny, or ask the customer to fund a plan before public launch?
 2. Q10: Please confirm the Free plan's max upload size and streaming terms on your Cloudinary dashboard once the account exists (I could not verify them).
@@ -69,4 +72,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the admin PR when CI is green. Backend for Sprint 1 is complete, so next is the frontend: auth pages and token handling (in-memory access token, single-flight refresh), then the profile picker, browse page and title detail page. No paid infrastructure is needed. After that, Sprint 1 closes with E2E tests and the retro.
+Merge the frontend-auth PR when CI is green. Next frontend slice: profile picker and management, then the browse page and title detail page (they use the generated client and `X-Profile-Id`). Then the admin studio shell and the E2E test. No paid infrastructure is needed; the same-site cookie question (Q12) must be answered before deploying.

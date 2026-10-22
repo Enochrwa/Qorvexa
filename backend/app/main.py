@@ -19,7 +19,16 @@ def create_app() -> FastAPI:
         allow_origins=settings.cors_origin_list,
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
-        allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "X-Request-ID",
+            "X-Qorvexa-Client",  # CSRF guard header on cookie endpoints
+            "X-Profile-Id",
+            "If-None-Match",
+        ],
+        # Without this, browser JavaScript cannot read these on cross-origin responses.
+        expose_headers=["Retry-After", "ETag", "X-Request-ID"],
     )
     app.add_middleware(RequestContextMiddleware)
     install_error_handlers(app)
