@@ -665,6 +665,24 @@ export interface components {
             /** Synopsis */
             synopsis?: string | null;
         };
+        /** EpisodeOut */
+        EpisodeOut: {
+            /** Air Date */
+            air_date: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Number */
+            number: number;
+            /** Runtime Seconds */
+            runtime_seconds: number | null;
+            /** Synopsis */
+            synopsis: string | null;
+        };
         /** EpisodePatch */
         EpisodePatch: {
             /** Air Date */
@@ -694,6 +712,13 @@ export interface components {
              */
             email: string;
         };
+        /** GenreOut */
+        GenreOut: {
+            /** Name */
+            name: string;
+            /** Slug */
+            slug: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -719,6 +744,15 @@ export interface components {
             id: string;
             /** Role */
             role: string;
+        };
+        /** PersonCredit */
+        PersonCredit: {
+            /** Name */
+            name: string;
+            /** Role */
+            role: string;
+            /** Slug */
+            slug: string;
         };
         /** ProfileCreate */
         ProfileCreate: {
@@ -836,6 +870,17 @@ export interface components {
             /** Synopsis */
             synopsis?: string | null;
         };
+        /** SeasonOut */
+        SeasonOut: {
+            /** Episodes */
+            episodes: components["schemas"]["EpisodeOut"][];
+            /** Name */
+            name: string | null;
+            /** Number */
+            number: number;
+            /** Synopsis */
+            synopsis: string | null;
+        };
         /** SeasonPatch */
         SeasonPatch: {
             /** Name */
@@ -901,6 +946,75 @@ export interface components {
              * @enum {string}
              */
             type: "movie" | "series";
+        };
+        /** TitleDetail */
+        TitleDetail: {
+            /** Backdrop Url */
+            backdrop_url: string | null;
+            /** Cast */
+            cast: components["schemas"]["PersonCredit"][];
+            /** Country */
+            country: string | null;
+            /** Downloads Enabled */
+            downloads_enabled: boolean;
+            /** Genres */
+            genres: components["schemas"]["GenreOut"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Language */
+            language: string | null;
+            /** Maturity Rating */
+            maturity_rating: string;
+            /** Name */
+            name: string;
+            /** Original Name */
+            original_name: string | null;
+            /** Poster Url */
+            poster_url: string | null;
+            /** Release Year */
+            release_year: number | null;
+            /** Season Count */
+            season_count: number;
+            /** Slug */
+            slug: string;
+            /** Synopsis */
+            synopsis: string | null;
+            /** Type */
+            type: string;
+        };
+        /** TitleList */
+        TitleList: {
+            /** Items */
+            items: components["schemas"]["TitleListItem"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** TitleListItem */
+        TitleListItem: {
+            /** Genres */
+            genres: components["schemas"]["GenreOut"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Language */
+            language: string | null;
+            /** Maturity Rating */
+            maturity_rating: string;
+            /** Name */
+            name: string;
+            /** Poster Url */
+            poster_url: string | null;
+            /** Release Year */
+            release_year: number | null;
+            /** Slug */
+            slug: string;
+            /** Type */
+            type: string;
         };
         /**
          * TitlePatch
@@ -1742,8 +1856,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["GenreOut"][];
                 };
+            };
+            /** @description Not modified (If-None-Match matched) */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -1889,8 +2010,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["TitleList"];
                 };
+            };
+            /** @description Not modified (If-None-Match matched) */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -1922,8 +2050,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["TitleDetail"];
                 };
+            };
+            /** @description Not modified (If-None-Match matched) */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -1955,8 +2090,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SeasonOut"][];
                 };
+            };
+            /** @description Not modified (If-None-Match matched) */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

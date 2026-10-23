@@ -9,4 +9,9 @@ export const API = 'http://localhost:8000/api/v1'
  * Tests override them with server.use(); everything else must be mocked explicitly
  * (unhandled requests fail loudly).
  */
-export const server = setupServer(http.get(`${API}/profiles`, () => HttpResponse.json(PROFILES)))
+export const server = setupServer(
+  http.get(`${API}/profiles`, () => HttpResponse.json(PROFILES)),
+  // The home address is the catalog, so a signed-in user always lands on these two.
+  http.get(`${API}/genres`, () => HttpResponse.json([])),
+  http.get(`${API}/titles`, () => HttpResponse.json({ items: [], next_cursor: null })),
+)

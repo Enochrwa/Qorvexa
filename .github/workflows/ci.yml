@@ -126,6 +126,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Block local artifacts (Redis dumps, logs, pid files, env files)
+        run: |
+          bad="$(git ls-files | grep -E '\.(rdb|aof|log|pid)$|(^|/)nohup\.out$|(^|/)\.env$' || true)"
+          if [ -n "$bad" ]; then echo "::error::Do not commit local artifacts:"; echo "$bad"; exit 1; fi
       - name: Check markdown links
         uses: lycheeverse/lychee-action@v2
         with:

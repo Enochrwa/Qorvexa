@@ -33,7 +33,7 @@ describe('profile picker', () => {
     signIn()
     const { router } = renderApp('/profiles?next=https%3A%2F%2Fevil.example.com')
     await userEvent.click(await screen.findByRole('button', { name: /Alex/ }))
-    await waitFor(() => expect(router.state.location.pathname).toBe('/'))
+    await waitFor(() => expect(router.state.location.pathname).toBe('/browse'))
   })
 
   it('shows an error instead of an empty picker when loading fails', async () => {

@@ -37,6 +37,8 @@
 
 ## Log
 
+- 2026-10-22: Browse and title detail pages on branch `feat/frontend-catalog` (149 frontend tests; verified against the real backend with 61 titles across 3 cursor pages). Declared catalog response schemas so the frontend is typed. Remaining: admin studio shell, E2E, perf check (LCP) in a real browser, retro.
+
 - 2026-10-22: Profile picker and management on branch `feat/frontend-profiles` (88 frontend tests). Verified against the real backend that the selected profile changes catalog results. Remaining frontend: browse page, title detail, admin studio shell, E2E.
 
 - 2026-10-22: Frontend auth pages and token handling on branch `feat/frontend-auth` (typed API client, 63 frontend tests, axe clean). Found and fixed a backend CORS bug (custom headers rejected on preflight) that mocked tests could not see; verified the client against the real backend.
