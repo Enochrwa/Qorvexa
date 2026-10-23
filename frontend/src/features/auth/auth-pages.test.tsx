@@ -38,7 +38,7 @@ describe('login', () => {
     await fill('Email', 'viewer@example.com')
     await fill('Password', PASSWORD)
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
-    await waitFor(() => expect(router.state.location.pathname).toBe('/'))
+    await waitFor(() => expect(router.state.location.pathname).toBe('/browse'))
     expect(useSession.getState().status).toBe('authenticated')
     expect(await screen.findByText('viewer@example.com')).toBeInTheDocument()
   })
@@ -60,7 +60,7 @@ describe('login', () => {
     await fill('Email', 'viewer@example.com')
     await fill('Password', PASSWORD)
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }))
-    await waitFor(() => expect(evil.router.state.location.pathname).toBe('/'))
+    await waitFor(() => expect(evil.router.state.location.pathname).toBe('/browse'))
   })
 
   it.each([
@@ -93,7 +93,7 @@ describe('login', () => {
   it('redirects signed-in users away from the login page', async () => {
     useSession.setState({ status: 'authenticated', accessToken: 't', user: ME })
     const { router } = renderApp('/login')
-    await waitFor(() => expect(router.state.location.pathname).toBe('/'))
+    await waitFor(() => expect(router.state.location.pathname).toBe('/browse'))
   })
 
   it('uses the right autocomplete hints for password managers', () => {

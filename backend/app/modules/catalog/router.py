@@ -12,6 +12,7 @@ from app.core.config import get_settings
 from app.core.db import get_session
 from app.core.ratelimit import Limiter, client_ip, get_rate_limiter
 from app.modules.catalog import service
+from app.modules.catalog.schemas import GenreOut, SeasonOut, TitleDetail, TitleList
 from app.modules.catalog.service import Sort
 from app.modules.profiles.deps import CurrentProfile, optional_profile
 
@@ -23,6 +24,11 @@ async def _limit_reads(
 ) -> None:
     await limiter.enforce(f"rl:catalog:ip:{client_ip(request)}", *CATALOG_READS_PER_IP)
 
+
+# The handlers return a raw Response (for ETag/304), so the schema is declared here instead.
+NOT_MODIFIED: dict[int | str, dict[str, Any]] = {
+    304: {"description": "Not modified (If-None-Match matched)"}
+}
 
 router = APIRouter(tags=["catalog"], dependencies=[Depends(_limit_reads)])
 
@@ -58,7 +64,7 @@ def _respond(request: Request, payload: BaseModel | Sequence[BaseModel]) -> Resp
     return body
 
 
-@router.get("/titles")
+@router.get("/titles", response_model=TitleList, responses=NOT_MODIFIED)
 async def list_titles(
     request: Request,
     session: Session,
@@ -86,18 +92,18 @@ async def list_titles(
     return _respond(request, result)
 
 
-@router.get("/titles/{slug}")
+@router.get("/titles/{slug}", response_model=TitleDetail, responses=NOT_MODIFIED)
 async def get_title(request: Request, slug: str, session: Session, profile: Profile) -> Response:
     result = await service.get_title(session, slug, dt.datetime.now(dt.UTC), _limit_for(profile))
     return _respond(request, result)
 
 
-@router.get("/titles/{slug}/seasons")
+@router.get("/titles/{slug}/seasons", response_model=list[SeasonOut], responses=NOT_MODIFIED)
 async def list_seasons(request: Request, slug: str, session: Session, profile: Profile) -> Response:
     result = await service.list_seasons(session, slug, dt.datetime.now(dt.UTC), _limit_for(profile))
     return _respond(request, result)
 
 
-@router.get("/genres")
+@router.get("/genres", response_model=list[GenreOut], responses=NOT_MODIFIED)
 async def list_genres(request: Request, session: Session) -> Response:
     return _respond(request, await service.list_genres(session))
