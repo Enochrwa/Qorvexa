@@ -25,6 +25,16 @@ Code: `frontend/src/lib/api/` (client, session, errors) and `frontend/src/featur
 - Verification and reset links carry a token: it is read once, removed from the address bar, and the page sets `Referrer-Policy: no-referrer`. Email verification is single-use, so it is requested exactly once even under React StrictMode.
 - Autocomplete hints (`username`, `current-password`, `new-password`) support password managers.
 
+## Profiles
+
+Code: `frontend/src/features/profiles/`.
+
+- The selected profile id is remembered per account in localStorage (`qorvexa.profile.<userId>`). It is a convenience, not a secret: the server checks ownership on every request. A different account never reads another's choice; blocked storage degrades to choosing again.
+- The client sends `X-Profile-Id` only when a token exists and only to profile-aware endpoints (not `/auth/*`, `/profiles`, `/admin/*`). It is added again on the refresh-and-retry path.
+- `useCurrentProfile()` validates the remembered id against the account's real profiles: an id that no longer exists is forgotten, and a lone profile is selected automatically. `RequireProfile` (used by pages that need a profile) redirects to `/profiles?next=...` until one is chosen.
+- Sign out clears the in-memory choice but keeps the remembered one for the next sign in.
+- Picker (`/profiles`) and management (`/profiles/manage`): create, edit, delete with inline confirmation. Add is disabled at 5 profiles and the only profile cannot be deleted (the server enforces both too). Avatars are 12 preset swatches in an accessible radio group, not uploads.
+
 ## Testing
 
 Vitest + MSW (unhandled requests fail the test) + axe-core. Colour contrast cannot be computed in jsdom; check it in a real browser. MSW cannot catch browser-only rules such as CORS preflight; those are tested on the backend (`tests/unit/test_cors.py`).

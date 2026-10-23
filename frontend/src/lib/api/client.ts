@@ -1,5 +1,6 @@
 import createClient from 'openapi-fetch'
 import type { paths } from '@/types/api'
+import { useProfile } from '@/features/profiles/store'
 import { useSession } from './session'
 
 export const API_URL: string = import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
@@ -13,6 +14,21 @@ const NO_RETRY = [
   '/api/v1/auth/verify-email',
   '/api/v1/auth/password/',
 ]
+
+/** Endpoints that do not take the selected profile. */
+const NO_PROFILE = ['/api/v1/auth/', '/api/v1/profiles', '/api/v1/admin/']
+
+/** Attach credentials and, for profile-aware endpoints, the selected profile. */
+function decorate(request: Request): void {
+  const token = useSession.getState().accessToken
+  if (!token) return
+  request.headers.set('Authorization', `Bearer ${token}`)
+  const profileId = useProfile.getState().selectedId
+  const path = new URL(request.url).pathname
+  if (profileId && !NO_PROFILE.some((p) => path.startsWith(p))) {
+    request.headers.set('X-Profile-Id', profileId)
+  }
+}
 
 let inflight: Promise<boolean> | null = null
 
@@ -49,14 +65,12 @@ async function doRefresh(): Promise<boolean> {
 
 const authFetch = async (request: Request): Promise<Response> => {
   const retry = request.clone()
-  const token = useSession.getState().accessToken
-  if (token) request.headers.set('Authorization', `Bearer ${token}`)
+  decorate(request)
   const response = await fetch(request)
   const path = new URL(request.url).pathname
   if (response.status !== 401 || NO_RETRY.some((p) => path.startsWith(p))) return response
   if (!(await refreshSession())) return response
-  const fresh = useSession.getState().accessToken
-  if (fresh) retry.headers.set('Authorization', `Bearer ${fresh}`)
+  decorate(retry)
   return fetch(retry)
 }
 

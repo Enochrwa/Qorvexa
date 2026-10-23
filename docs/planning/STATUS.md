@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 9, frontend auth)
+- **Last run:** 2026-10-21 (run 10, frontend profiles)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,7 +37,7 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); frontend auth pages and token handling done; the profile picker, browse page, title detail page, admin studio and E2E remain. Full list: docs/planning/github-issues.md.
+Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); frontend auth pages, token handling and the profile picker/management done; the browse page, title detail page, admin studio and E2E remain. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
@@ -72,4 +72,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the frontend-auth PR when CI is green. Next frontend slice: profile picker and management, then the browse page and title detail page (they use the generated client and `X-Profile-Id`). Then the admin studio shell and the E2E test. No paid infrastructure is needed; the same-site cookie question (Q12) must be answered before deploying.
+Merge the profiles PR when CI is green. Next frontend slice: the browse page (filters in the URL, skeletons, responsive grid, load more) and the title detail page (hero, synopsis, seasons and episodes). Both must handle a stale selected profile (the API answers 404 "Profile not found"). Then the admin studio shell and the E2E test. No paid infrastructure is needed; Q12 (same-site cookies) must be answered before deploying.
