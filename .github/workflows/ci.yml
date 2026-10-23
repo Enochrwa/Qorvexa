@@ -37,7 +37,7 @@ jobs:
         id: detect
         run: |
           if [ -f backend/pyproject.toml ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v7
         if: steps.detect.outputs.present == 'true'
       - name: Install
         if: steps.detect.outputs.present == 'true'
@@ -98,7 +98,7 @@ jobs:
       JWT_SECRET: ci-secret-ci-secret-ci-secret-0123456789
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
