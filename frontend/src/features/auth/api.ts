@@ -1,10 +1,12 @@
 import { api, CSRF_HEADER, refreshSession } from '@/lib/api/client'
 import { unwrap } from '@/lib/api/errors'
+import { useProfile } from '@/features/profiles/store'
 import { useSession } from '@/lib/api/session'
 
 export async function loadMe() {
   const me = await unwrap(api.GET('/api/v1/auth/me'))
   useSession.getState().setUser(me)
+  useProfile.getState().hydrate(me.id)
   return me
 }
 
@@ -35,6 +37,7 @@ export async function logout() {
     await unwrap(api.POST('/api/v1/auth/logout', { headers: CSRF_HEADER }))
   } finally {
     useSession.getState().clear() // always sign out locally, even if the request failed
+    useProfile.getState().reset()
   }
 }
 

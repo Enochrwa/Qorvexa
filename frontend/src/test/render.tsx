@@ -4,6 +4,7 @@ import { StrictMode } from 'react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { routes } from '@/app/router'
 import { useSession } from '@/lib/api/session'
+import { ME } from './fixtures'
 
 /**
  * Render the real routes. The session starts as anonymous (as it would after a failed restore)
@@ -24,4 +25,9 @@ export function renderApp(path: string, options: { strict?: boolean } = {}) {
   return { ...utils, router, queryClient }
 }
 
-export const ME = { id: 'u1', email: 'viewer@example.com', role: 'viewer', email_verified: true }
+export { ME, PROFILES } from './fixtures'
+
+/** Put the app in a signed-in state without going through the login screen. */
+export function signIn() {
+  useSession.setState({ status: 'authenticated', accessToken: 'tok', user: ME })
+}

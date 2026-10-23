@@ -2,11 +2,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { logout } from '@/features/auth/api'
+import { useCurrentProfile } from '@/features/profiles/hooks'
 import { useSession } from '@/lib/api/session'
 
 export function AppShell() {
   const status = useSession((s) => s.status)
   const user = useSession((s) => s.user)
+  const { profile } = useCurrentProfile()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -30,7 +32,10 @@ export function AppShell() {
           <div className="ml-auto flex items-center gap-3">
             {status === 'authenticated' && user ? (
               <>
-                <span className="hidden text-sm text-text-muted sm:inline">{user.email}</span>
+                <Link to="/profiles" className="text-sm text-accent underline">
+                  {profile ? `${profile.name} · Switch profile` : 'Choose profile'}
+                </Link>
+                <span className="hidden text-sm text-text-muted md:inline">{user.email}</span>
                 <Button variant="secondary" size="sm" onClick={onSignOut}>
                   Sign out
                 </Button>
