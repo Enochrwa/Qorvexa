@@ -32,7 +32,7 @@ jobs:
       JWT_SECRET: ci-secret-ci-secret-ci-secret-0123456789
       APP_ENV: test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Detect backend
         id: detect
         run: |
@@ -63,7 +63,7 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Detect frontend
         id: detect
         run: |
@@ -97,7 +97,7 @@ jobs:
     env:
       JWT_SECRET: ci-secret-ci-secret-ci-secret-0123456789
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v5
       - uses: actions/setup-node@v4
         with:
@@ -116,7 +116,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build backend image
         run: docker build -f infra/docker/backend.Dockerfile -t qorvexa-api:ci .
       - name: Build frontend image
@@ -125,7 +125,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Block local artifacts (Redis dumps, logs, pid files, env files)
         run: |
           bad="$(git ls-files | grep -E '\.(rdb|aof|log|pid)$|(^|/)nohup\.out$|(^|/)\.env$' || true)"
