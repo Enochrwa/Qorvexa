@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 12, admin studio titles)
+- **Last run:** 2026-10-21 (run 13, admin studio seasons)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,7 +37,7 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); frontend auth pages, token handling and the profile picker/management done; browse, title detail and the admin studio (titles, publishing) done; the seasons/episodes editor, E2E and a real-browser performance/contrast check remain. Full list: docs/planning/github-issues.md.
+Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); frontend auth pages, token handling and the profile picker/management done; browse, title detail and the admin studio done; the admin studio is complete (titles, publishing, seasons, episodes, reorder). Left in Sprint 1: the E2E test, a real-browser performance/contrast check, and the retro. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
@@ -72,4 +72,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the admin-studio PR when CI is green. Next: the studio's seasons and episodes editor (series only, episode reorder with keyboard support), then the E2E test and the Sprint 1 retro. A real-browser check of LCP and colour contrast is still owed (no browser in this sandbox). No paid infrastructure is needed; Q12 (same-site cookies) must be answered before deploying.
+Merge the seasons PR when CI is green. All Sprint 1 build tasks are then done. Remaining for Sprint 1: the end-to-end test and a real-browser check of LCP and colour contrast (both need a browser, which this sandbox does not have), then the retro and the Sprint 2 plan (Cloudinary provider, upload, usage guard). Sprint 2 can start without the browser checks. No paid infrastructure is needed; Q12 (same-site cookies), Q9 (Cloudinary capacity) and the customer confirmations must be answered before the pilot.

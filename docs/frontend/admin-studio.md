@@ -26,6 +26,16 @@ Code: `frontend/src/features/admin/`. Routes live under `/admin` and are loaded 
 - The server refuses to publish without a synopsis and a poster (409); the reason is shown.
 - Unpublish returns the title to draft. Delete is disabled while published, asks for confirmation, and returns to the list.
 
+## Seasons and episodes (series only)
+
+Shown on the editor page for series titles (`SeasonsPanel`).
+
+- Add, edit and delete seasons (deleting says that its episodes go too, and asks first). New season and episode numbers default to the next free number; duplicates show as a field error from the server's 409.
+- Episodes: name, synopsis, runtime entered as minutes and seconds (stored as seconds, so a runtime like 45:45 is kept exactly), air date, optional skip markers (intro start/end, recap end, in seconds) and a "Published" flag. The form checks the same rules as the server: the intro cannot end before it starts, and no marker can be later than the runtime.
+- One-click Publish/Unpublish per episode (sends only `status`). Viewers see only published episodes.
+- **Reorder** uses Up/Down buttons (not drag and drop), so it works from the keyboard and with screen readers. Each move sends the complete new order and the server renumbers 1..n atomically. The end positions use `aria-disabled` instead of `disabled`, so focus is not lost when an episode reaches the top or bottom, and each move is announced through a polite live region ("Moved Pilot down to position 2 of 3."). While a move is in flight further moves are ignored; on failure the old order stays and the error is shown.
+- Runtimes in the list are shown rounded to minutes (the same as the viewer page).
+
 ## Not here yet
 
-Seasons and episodes (create, edit, reorder) are the next slice. Poster upload and media attachment arrive with Sprint 2 (Cloudinary); for now images are pasted https addresses.
+Poster upload and media attachment arrive with Sprint 2 (Cloudinary); for now images are pasted https addresses, and episodes have no video until then.

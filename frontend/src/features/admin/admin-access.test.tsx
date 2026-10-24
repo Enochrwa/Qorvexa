@@ -49,6 +49,7 @@ describe('studio access', () => {
     signInAs(user)
     renderApp('/admin/titles')
     expect(await screen.findByRole('heading', { name: 'Titles' })).toBeInTheDocument()
+    await screen.findByText('No titles yet. Create the first one.') // wait for its request to finish
   })
 
   it('shows the Studio link in the header only to editors and admins', async () => {
@@ -67,5 +68,6 @@ describe('studio access', () => {
     signInAs(EDITOR)
     const { router } = renderApp('/admin')
     await waitFor(() => expect(router.state.location.pathname).toBe('/admin/titles'))
+    await screen.findByRole('heading', { name: 'Titles' }) // let the lazy page finish loading
   })
 })
