@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/Skeleton'
 import { ApiError } from '@/lib/api/errors'
 import { adminKey, createAdminTitle, getAdminTitle, patchAdminTitle, type AdminTitle } from './api'
 import { emptyForm, formFromTitle, toCreate, toPatch } from './mapping'
+import { SeasonsPanel } from './SeasonsPanel'
 import { StatusPanel } from './StatusPanel'
 import { TitleForm } from './TitleForm'
 
@@ -105,6 +106,7 @@ function Editor({ id }: { id: string }) {
           navigate('/admin/titles', { replace: true })
         }}
       />
+      {title.type === 'series' ? <SeasonsPanel titleId={title.id} /> : null}
       {saved ? (
         <p role="status" className="text-success">
           Changes saved.

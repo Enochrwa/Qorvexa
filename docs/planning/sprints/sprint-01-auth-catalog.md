@@ -23,7 +23,7 @@
 - [ ] Browse page with filters, skeletons, responsive grid (L)
 - [ ] Title detail page: hero, synopsis, seasons/episodes list (L)
 - [x] Admin studio shell: role-guarded route, titles list, title editor, publish/unpublish/delete (M)
-- [ ] Admin studio: seasons and episodes editor with reorder (M)
+- [x] Admin studio: seasons and episodes editor with reorder (M) (keyboard reorder via Up/Down buttons, announced to screen readers)
 
 ### Quality
 - [x] Unit/integration tests per [backend testing](../../backend/testing.md) for auth and authorization (M)
@@ -37,6 +37,8 @@
 - Migration upgrade and downgrade both work in CI.
 
 ## Log
+
+- 2026-10-22: Seasons and episodes editor with reorder on branch `feat/frontend-admin-seasons` (205 frontend tests; verified against the real backend). Remaining Sprint 1: E2E, real-browser LCP/contrast check, retro.
 
 - 2026-10-22: Admin studio (guard, titles list, title editor, publishing) on branch `feat/frontend-admin-titles` (183 frontend tests; verified against the real backend including the audit trail). Studio routes are lazy-loaded. Remaining: seasons/episodes editor, E2E, real-browser LCP/contrast check, retro.
 
