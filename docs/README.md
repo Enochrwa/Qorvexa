@@ -36,6 +36,7 @@ Start here. Everything needed to plan, build, test, deploy and operate Qorvexa l
 - [Design system](frontend/design-system.md)
 - [Auth and API client](frontend/auth-and-api-client.md)
 - [Catalog UI](frontend/catalog.md)
+- [Admin studio](frontend/admin-studio.md)
 - [State, data fetching and routing](frontend/state-and-data.md)
 - [Testing (frontend)](frontend/testing.md)
 

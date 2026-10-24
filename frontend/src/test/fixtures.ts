@@ -102,3 +102,52 @@ export const SEASONS = [
     ],
   },
 ]
+
+export const EDITOR = {
+  id: 'u2',
+  email: 'editor@example.com',
+  role: 'editor',
+  email_verified: true,
+}
+export const ADMIN_USER = {
+  id: 'u3',
+  email: 'admin@example.com',
+  role: 'admin',
+  email_verified: true,
+}
+
+export const TITLE_ID = '0b1f6a52-3c0e-4a52-9b0a-1b5d9f0c1a11'
+
+export function adminItem(n: number, overrides: Record<string, unknown> = {}) {
+  return {
+    id: `0b1f6a52-3c0e-4a52-9b0a-${String(n).padStart(12, '0')}`,
+    slug: `title-${n}`,
+    type: 'movie',
+    name: `Title ${n}`,
+    status: 'draft',
+    state: 'draft',
+    maturity_rating: '13+',
+    release_year: 2021,
+    publish_at: null,
+    available_until: null,
+    updated_at: '2026-10-22T10:00:00Z',
+    ...overrides,
+  }
+}
+
+export const ADMIN_TITLE = {
+  ...adminItem(1, { id: TITLE_ID, slug: 'the-long-road', name: 'The Long Road' }),
+  original_name: 'Original',
+  synopsis: 'A journey.',
+  language: 'en',
+  country: 'RW',
+  poster_url: 'https://img.example.com/p.jpg',
+  backdrop_url: null,
+  downloads_enabled: false,
+  created_at: '2026-10-20T10:00:00Z',
+  genres: ['drama'],
+  cast: [
+    { name: 'Dee Rector', role: 'director', billing_order: 0 },
+    { name: 'Amy Lead', role: 'actor', billing_order: 1 },
+  ],
+}

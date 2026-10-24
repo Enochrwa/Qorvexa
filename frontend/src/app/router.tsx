@@ -1,4 +1,5 @@
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router-dom'
+import { RequireEditor } from '@/features/admin/guards'
 import { BrowsePage } from '@/features/catalog/BrowsePage'
 import { TitleDetailPage } from '@/features/catalog/TitleDetailPage'
 import { ForgotPasswordPage } from '@/features/auth/ForgotPasswordPage'
@@ -34,6 +35,39 @@ export const routes: RouteObject[] = [
         children: [
           { path: 'profiles', element: <ProfilePickerPage /> },
           { path: 'profiles/manage', element: <ManageProfilesPage /> },
+          {
+            path: 'admin',
+            element: <RequireEditor />,
+            children: [
+              {
+                // The studio is only for editors, so its code is loaded on demand.
+                lazy: async () => ({
+                  Component: (await import('@/features/admin/AdminLayout')).AdminLayout,
+                }),
+                children: [
+                  { index: true, element: <Navigate to="/admin/titles" replace /> },
+                  {
+                    path: 'titles',
+                    lazy: async () => ({
+                      Component: (await import('@/features/admin/TitlesListPage')).TitlesListPage,
+                    }),
+                  },
+                  {
+                    path: 'titles/new',
+                    lazy: async () => ({
+                      Component: (await import('@/features/admin/TitleEditorPage')).NewTitlePage,
+                    }),
+                  },
+                  {
+                    path: 'titles/:id',
+                    lazy: async () => ({
+                      Component: (await import('@/features/admin/TitleEditorPage')).EditTitlePage,
+                    }),
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
       { path: '*', element: <NotFoundPage /> },
