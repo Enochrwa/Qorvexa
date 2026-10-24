@@ -22,7 +22,8 @@
 - [x] Profile picker and management (M)
 - [ ] Browse page with filters, skeletons, responsive grid (L)
 - [ ] Title detail page: hero, synopsis, seasons/episodes list (L)
-- [ ] Admin studio shell and title/season/episode editor (L)
+- [x] Admin studio shell: role-guarded route, titles list, title editor, publish/unpublish/delete (M)
+- [ ] Admin studio: seasons and episodes editor with reorder (M)
 
 ### Quality
 - [x] Unit/integration tests per [backend testing](../../backend/testing.md) for auth and authorization (M)
@@ -36,6 +37,8 @@
 - Migration upgrade and downgrade both work in CI.
 
 ## Log
+
+- 2026-10-22: Admin studio (guard, titles list, title editor, publishing) on branch `feat/frontend-admin-titles` (183 frontend tests; verified against the real backend including the audit trail). Studio routes are lazy-loaded. Remaining: seasons/episodes editor, E2E, real-browser LCP/contrast check, retro.
 
 - 2026-10-22: Browse and title detail pages on branch `feat/frontend-catalog` (149 frontend tests; verified against the real backend with 61 titles across 3 cursor pages). Declared catalog response schemas so the frontend is typed. Remaining: admin studio shell, E2E, perf check (LCP) in a real browser, retro.
 

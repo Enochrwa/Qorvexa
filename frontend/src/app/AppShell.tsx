@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button'
+import { hasRole } from '@/features/admin/role'
 import { logout } from '@/features/auth/api'
 import { useCurrentProfile } from '@/features/profiles/hooks'
 import { useSession } from '@/lib/api/session'
@@ -32,6 +33,11 @@ export function AppShell() {
           <div className="ml-auto flex items-center gap-3">
             {status === 'authenticated' && user ? (
               <>
+                {hasRole(user, 'editor') ? (
+                  <Link to="/admin" className="text-sm text-accent underline">
+                    Studio
+                  </Link>
+                ) : null}
                 <Link to="/profiles" className="text-sm text-accent underline">
                   {profile ? `${profile.name} · Switch profile` : 'Choose profile'}
                 </Link>
