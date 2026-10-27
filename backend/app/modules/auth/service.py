@@ -121,17 +121,39 @@ async def _revoke_family(session: AsyncSession, family_id: uuid.UUID) -> None:
     )
 
 
+async def _is_retry_within_grace(session: AsyncSession, row: RefreshToken) -> bool:
+    """True if a rotated token is being presented again soon enough to be a retry, not theft.
+
+    A browser can lose the response of a refresh (connection drop, reload mid-request, a second
+    tab) after the server already rotated the token, so it legitimately presents the old one
+    again. That is allowed only while the token was *rotated* (not revoked by logout, password
+    reset or theft detection), the grace window is open, and its successor has not been used.
+    If the successor was already used, two parties hold the lineage: that is theft.
+    """
+    grace = get_settings().refresh_reuse_grace_seconds
+    if grace <= 0 or row.revoked_at is None or row.replaced_by is None:
+        return False
+    if _now() - row.revoked_at > timedelta(seconds=grace):
+        return False
+    successor = await session.get(RefreshToken, row.replaced_by)
+    return successor is not None and successor.revoked_at is None
+
+
 async def refresh(session: AsyncSession, raw: str) -> tuple[str, str]:
-    """Rotate a refresh token. Reuse of an already-rotated token revokes the whole family."""
+    """Rotate a refresh token. Reuse of an already-rotated token revokes the whole family,
+    except a retry inside the short grace window (see `_is_retry_within_grace`)."""
     row = await session.scalar(
         select(RefreshToken).where(RefreshToken.token_hash == hash_token(raw)).with_for_update()
     )
     if row is None:
         raise Unauthorized("Invalid session")
+    retry = False
     if row.revoked_at is not None:
-        await _revoke_family(session, row.family_id)
-        await session.commit()  # persist the revocation before rejecting
-        raise Unauthorized("Invalid session")
+        retry = await _is_retry_within_grace(session, row)
+        if not retry:
+            await _revoke_family(session, row.family_id)
+            await session.commit()  # persist the revocation before rejecting
+            raise Unauthorized("Invalid session")
     if row.expires_at <= _now():
         raise Unauthorized("Session expired")
     user = await session.get(User, row.user_id)
@@ -140,8 +162,9 @@ async def refresh(session: AsyncSession, raw: str) -> tuple[str, str]:
         await session.commit()
         raise Unauthorized("Invalid session")
     new_raw, new_row = await _new_refresh(session, user.id, row.family_id)
-    row.revoked_at = _now()
-    row.replaced_by = new_row.id
+    if not retry:
+        row.revoked_at = _now()
+        row.replaced_by = new_row.id
     await session.commit()
     return create_access_token(user.id, user.role), new_raw
 

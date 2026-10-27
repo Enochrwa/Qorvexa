@@ -146,6 +146,54 @@ describe('api client', () => {
   })
 })
 
+describe('refresh resilience', () => {
+  it('retries once when the network drops, and signs the user in if the retry works', async () => {
+    let attempts = 0
+    server.use(
+      http.post(`${API}/auth/refresh`, () => {
+        attempts += 1
+        return attempts === 1
+          ? HttpResponse.error()
+          : HttpResponse.json({ access_token: 'recovered', token_type: 'bearer', expires_in: 900 })
+      }),
+    )
+    const { refreshSession } = await import('./client')
+    expect(await refreshSession()).toBe(true)
+    expect(attempts).toBe(2)
+    expect(useSession.getState().accessToken).toBe('recovered')
+  })
+
+  it('gives up after one retry and keeps the session', async () => {
+    let attempts = 0
+    signedIn('keep-me')
+    server.use(
+      http.post(`${API}/auth/refresh`, () => {
+        attempts += 1
+        return HttpResponse.error()
+      }),
+    )
+    const { refreshSession } = await import('./client')
+    expect(await refreshSession()).toBe(false)
+    expect(attempts).toBe(2)
+    expect(useSession.getState().status).toBe('authenticated')
+  })
+
+  it('never retries an HTTP rejection', async () => {
+    let attempts = 0
+    signedIn()
+    server.use(
+      http.post(`${API}/auth/refresh`, () => {
+        attempts += 1
+        return HttpResponse.json({ detail: 'Invalid session' }, { status: 401 })
+      }),
+    )
+    const { refreshSession } = await import('./client')
+    expect(await refreshSession()).toBe(false)
+    expect(attempts).toBe(1)
+    expect(useSession.getState().status).toBe('anonymous')
+  })
+})
+
 describe('error handling', () => {
   it('parses problem+json including field errors and Retry-After', async () => {
     server.use(

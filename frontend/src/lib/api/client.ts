@@ -44,23 +44,31 @@ export function refreshSession(): Promise<boolean> {
   return inflight
 }
 
+const RETRY_DELAY_MS = 400
+
 async function doRefresh(): Promise<boolean> {
-  try {
-    const res = await fetch(`${API_URL}/api/v1/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: CSRF_HEADER,
-    })
-    if (!res.ok) {
-      useSession.getState().clear()
-      return false
+  // A network failure (connection dropped, request aborted) is retried once: the server may
+  // already have rotated the token, and it accepts a quick retry with the old one. An HTTP
+  // rejection is final and is never retried.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(`${API_URL}/api/v1/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: CSRF_HEADER,
+      })
+      if (!res.ok) {
+        useSession.getState().clear()
+        return false
+      }
+      const body = (await res.json()) as { access_token: string }
+      useSession.getState().setToken(body.access_token)
+      return true
+    } catch {
+      if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
     }
-    const body = (await res.json()) as { access_token: string }
-    useSession.getState().setToken(body.access_token)
-    return true
-  } catch {
-    return false // offline: keep the session, the caller sees the original error
   }
+  return false // offline: keep the session, the caller sees the original error
 }
 
 const authFetch = async (request: Request): Promise<Response> => {

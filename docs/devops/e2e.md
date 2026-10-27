@@ -7,6 +7,7 @@ Real browser (Playwright, Chromium) against the real stack: built frontend, API,
 | `auth.spec.ts` | Sign up with an emailed link, sign in refused until verified, session survives a reload (httpOnly cookie, no JWT in browser storage), sign out ends it, wrong password message, protected pages return you after sign in, `?next` cannot leave the site, password reset by email (new password works, old one does not, other devices are signed out, link is single use) |
 | `catalog.spec.ts` | Anonymous visitors get a safe default catalog; filters live in the URL; a hidden title looks like a missing one; the selected profile changes what is visible and is remembered across reload and sign in; a deleted profile does not strand the app |
 | `studio.spec.ts` | Viewers cannot use the studio; an admin builds a series, reorders episodes **with the keyboard only**, publishes it and viewers see the new order; unpublish hides it; scheduled titles stay hidden |
+| `session-resilience.spec.ts` | A refresh response that never reaches the browser, and rapid reloads, do not sign the user out |
 | `a11y.spec.ts` | axe (WCAG 2.0/2.1 A and AA, **including colour contrast**) on public, signed-in and studio pages |
 
 `catalog` and `a11y` also run on a phone-sized viewport (Pixel 7) because the product is mobile-first.

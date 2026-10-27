@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:5173"
     jwt_access_ttl_minutes: int = 15
     jwt_refresh_ttl_days: int = 30
+    # A rotated refresh token presented again within this many seconds is treated as a retry
+    # (lost response, quick reload, second tab), not theft. 0 disables the grace period.
+    refresh_reuse_grace_seconds: int = 10
     cookie_secure: bool = False
     smtp_host: str = "localhost"
     smtp_port: int = 1025

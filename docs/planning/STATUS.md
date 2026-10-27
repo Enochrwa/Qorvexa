@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 14, e2e and real-browser checks)
+- **Last run:** 2026-10-21 (run 14, e2e, real-browser checks, refresh grace)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -45,6 +45,7 @@ Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout 
 - D9: Maturity scale all < 7+ < 13+ < 16+ < 18+ (ADR-0012); customer to confirm.
 - D10: Catalog visibility rule, default anonymous limit `13+`, keyset pagination (ADR-0013).
 - D11: Frontend stack pins: ESLint 9, TypeScript 5.9, `@hookform/resolvers` 5 (v6 has a peer conflict), MSW 3 (`onUnhandledFrame`). Revisit when upstream catches up.
+- D12: Refresh-token reuse has a 10 s grace for retries (ADR-0014): fixes a real sign-out bug found by the browser tests.
 - D8: Cloudinary only for development and a tiny invite-only pilot; usage guard thresholds configurable, fails safe, no guarantee against charges (ADR-0011). Paid worker host and any paid plan need an approved budget; none selected.
 - D7: Video = Cloudinary Free (ADR-0011), replacing Mux for the pilot.
 - D4: Hosting = Render + Neon + owner-managed Redis (ADR-0010, accepted).
