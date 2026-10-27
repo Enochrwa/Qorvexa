@@ -13,7 +13,8 @@ afterEach(() => {
   resetRestoreForTests()
   useSession.setState({ status: 'loading', accessToken: null, user: null })
   useProfile.setState({ selectedId: null })
-  localStorage.clear()
-  sessionStorage.clear()
+  // Node-environment files (tooling checks) have no browser storage.
+  if (typeof localStorage !== 'undefined') localStorage.clear()
+  if (typeof sessionStorage !== 'undefined') sessionStorage.clear()
 })
 afterAll(() => server.close())
