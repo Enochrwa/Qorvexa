@@ -54,4 +54,4 @@ Still unconfirmed by the customer: content rights (R4), post-pilot budget (R1).
 
 Maturity scale (ADR-0012) is a working default; the customer should confirm it or give the classification to use before launch.
 
-Hosting constraint found 2026-10-22: the session cookie only works if the frontend and API are on the same site, so free platform subdomains on different hosts would break sign-in persistence. A custom domain (question 9) or a verified same-origin proxy is needed before the pilot. See docs/frontend/auth-and-api-client.md.
+Hosting constraint (confirmed in a real browser 2026-10-23): the session cookie only works if the frontend and API are on the same site, so free platform subdomains on different hosts break sign-in persistence on every reload. A custom domain (question 9) or a verified same-origin proxy is needed before the pilot. See docs/frontend/auth-and-api-client.md.

@@ -57,7 +57,7 @@ export function TitlesListPage() {
         <h2 className="text-2xl font-semibold">Titles</h2>
         <Link
           to="/admin/titles/new"
-          className="inline-flex h-11 items-center rounded-md bg-accent px-4 font-medium text-white hover:bg-accent-hover"
+          className="inline-flex h-11 items-center rounded-md bg-accent-solid px-4 font-medium text-white hover:bg-accent-solid-hover"
         >
           New title
         </Link>

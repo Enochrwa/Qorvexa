@@ -41,6 +41,8 @@ Vitest + MSW (unhandled requests fail the test) + axe-core. Colour contrast cann
 
 ## Deployment constraint: same site for cookies
 
+**Verified in a real browser (2026-10-23, docs/research/browser-measurements.md):** with the frontend and API on different sites the browser refuses to store the refresh cookie, so every reload signs the user out; on the same site it works. This is a blocker, not a precaution.
+
 The refresh cookie is `SameSite=Lax`. Browsers do not send such cookies on cross-site `fetch` calls, so the frontend and the API must be on the **same site**. A frontend on one platform subdomain and an API on another (for example `*.pages.dev` and `*.onrender.com`) are different sites and sessions would not survive a reload. Options, to be decided in the deployment plan and **verified on the real hosts before the pilot**:
 
 1. One custom domain with `app.` and `api.` subdomains (same site). Needs a domain: customer approval (question 9).

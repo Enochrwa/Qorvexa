@@ -7,8 +7,12 @@
   --color-surface-3: #262633;
   --color-text: #f4f4f7;
   --color-text-muted: #a8a8b8;
-  --color-accent: #e5484d;
-  --color-accent-hover: #f26065;
+  /* Accent as TEXT, links and focus rings on dark surfaces (5.1+ on every surface). */
+  --color-accent: #f76469;
+  --color-accent-hover: #ff7a7f;
+  /* Accent as a FILLED background with white text (5.3 normal, 6.5 on hover). */
+  --color-accent-solid: #c93036;
+  --color-accent-solid-hover: #b02a2e;
   --color-danger: #ff6369;
   --color-success: #3dd68c;
   --color-warning: #ffb224;

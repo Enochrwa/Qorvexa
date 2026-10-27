@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 13, admin studio seasons)
+- **Last run:** 2026-10-21 (run 14, e2e and real-browser checks)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -37,7 +37,7 @@
 | Finalize ADR-0003 | done for the abstraction; Mux spend pending Q6 |
 | Free-tier research | done (docs/research/free-tier-findings.md) |
 
-Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); frontend auth pages, token handling and the profile picker/management done; browse, title detail and the admin studio done; the admin studio is complete (titles, publishing, seasons, episodes, reorder). Left in Sprint 1: the E2E test, a real-browser performance/contrast check, and the retro. Full list: docs/planning/github-issues.md.
+Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout and profiles CRUD, catalog models and public catalog endpoints done; admin catalog CRUD, audit log and seed script done (all Sprint 1 backend tasks complete); frontend auth pages, token handling and the profile picker/management done; browse, title detail and the admin studio done; the admin studio is complete (titles, publishing, seasons, episodes, reorder). **Sprint 1 is complete** (retro in the sprint file): 23 real-browser tests, LCP 1.96 s cold on throttled 4G, accessibility including contrast verified. Full list: docs/planning/github-issues.md.
 
 ## Decisions made
 
@@ -53,7 +53,7 @@ Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout 
 
 ## Open questions (answerable in one line)
 
-0. Q12: Sessions need the frontend and API on the same site. Approve a custom domain for the pilot (needs customer approval, Q9), or should I test a same-origin proxy on the free hosts first? See docs/frontend/auth-and-api-client.md.
+0. Q12 (now proven, not theoretical): sessions need the frontend and API on the same site. My recommendation, because it costs nothing: serve the built frontend from the API service (same origin). Alternatives: a custom domain (needs customer approval) or a proxy. Which do you choose? Evidence and options: docs/research/browser-measurements.md.
 
 1. Q9: Cloudinary Free allows roughly 3 hours of total SD viewing per month (ADR-0011). Keep the pilot invite-only and tiny, or ask the customer to fund a plan before public launch?
 2. Q10: Please confirm the Free plan's max upload size and streaming terms on your Cloudinary dashboard once the account exists (I could not verify them).
@@ -72,4 +72,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the seasons PR when CI is green. All Sprint 1 build tasks are then done. Remaining for Sprint 1: the end-to-end test and a real-browser check of LCP and colour contrast (both need a browser, which this sandbox does not have), then the retro and the Sprint 2 plan (Cloudinary provider, upload, usage guard). Sprint 2 can start without the browser checks. No paid infrastructure is needed; Q12 (same-site cookies), Q9 (Cloudinary capacity) and the customer confirmations must be answered before the pilot.
+Merge the e2e PR once its CI is green (the new `e2e` job runs for the first time there; expect to iterate on it). Then, depending on your answer to Q12, build the same-origin option. Sprint 2 (2026-11-18 start, but nothing blocks starting early): `VideoProvider` interface and media models, `LocalProvider` with a provider contract test, then `CloudinaryProvider` and the usage guard (ADR-0011). Adding `e2e` to the required checks needs your OK because it changes branch protection. No paid infrastructure is needed.

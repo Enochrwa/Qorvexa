@@ -50,3 +50,7 @@ Thumbs.db
 *.rdb
 appendonly.aof
 nohup.out
+
+playwright-report
+test-results
+*.tsbuildinfo
