@@ -142,6 +142,14 @@ async def test_refresh_token_reuse_revokes_the_whole_family(
     assert (await client.post(f"{API}/refresh", headers=CSRF)).status_code == 200  # legit rotation
     legit_new = client.cookies.get("refresh_token")
 
+    # The grace window for lost responses has passed (see test_refresh_grace.py).
+    await db.execute(
+        update(RefreshToken)
+        .values(revoked_at=datetime.now(UTC) - timedelta(minutes=5))
+        .where(RefreshToken.revoked_at.is_not(None))
+    )
+    await db.commit()
+
     client.cookies.clear()
     client.cookies.set("refresh_token", stolen or "", path="/api/v1/auth")
     reuse = await client.post(f"{API}/refresh", headers=CSRF)  # attacker replays the old token

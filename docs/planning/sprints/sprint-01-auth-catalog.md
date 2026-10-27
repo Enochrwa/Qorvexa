@@ -38,6 +38,7 @@
 
 ## Log
 
+- 2026-10-23: Found by the first CI run of the browser tests and fixed: a lost or aborted refresh response signed users out (refresh grace, ADR-0014, plus one client retry). The old 'two tabs' known gap is closed.
 - 2026-10-23: Sprint 1 closed. E2E suite and real-browser checks added (23 browser tests); fixed colour contrast; measured LCP; verified the cross-site cookie problem. Retro below.
 - 2026-10-22: Seasons and episodes editor with reorder on branch `feat/frontend-admin-seasons` (205 frontend tests; verified against the real backend). Remaining Sprint 1: E2E, real-browser LCP/contrast check, retro.
 
@@ -74,6 +75,8 @@ _Sprint 1 ran 2026-10-21 to 2026-10-23 (the plan allowed until 2026-11-17)._
 - I committed local artifacts twice (a Redis dump, TypeScript build caches). Harmless here (no secrets, checked) but avoidable; CI now blocks those file types.
 - Several tests were wrong, not the app (rounding, locators). Cheap, but it cost iterations; prefer role-and-name locators and exact matches.
 - Real-browser checks came last. They should have come earlier: the contrast and cookie findings would have been cheaper in Sprint 1's first week.
+
+**Found late, by real-browser CI:** a token-rotation race (lost refresh response, quick reload) could sign users out. The mocked and local tests could not see it because localhost answers instantly. Fixed (ADR-0014).
 
 **Changes for Sprint 2**
 1. Run the e2e suite in CI on every PR (job added, informational until proven stable, then required).

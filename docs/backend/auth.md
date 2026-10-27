@@ -49,7 +49,7 @@ Playback authorization checks: title published, within availability window, prof
 - In `APP_ENV=production` the app refuses to start with the default or short `JWT_SECRET`.
 - Password deny-list is a small built-in set; replace with a larger list before the pilot.
 - Registration also creates a default profile (`18+`) in the same transaction. Profile-scoped endpoints use `require_profile` (`app/modules/profiles/deps.py`).
-- Known gaps: two browser tabs refreshing the same token at the same instant can trip reuse detection and sign the user out.
+- Refresh tokens rotate; presenting a rotated token again revokes the whole session, **except** a short grace for retries (lost response, quick reload, two tabs): see ADR-0014 and `REFRESH_REUSE_GRACE_SECONDS`.
 
 ## Rate limiting and lockout
 
