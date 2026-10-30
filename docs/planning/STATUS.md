@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 14, e2e, real-browser checks, refresh grace)
+- **Last run:** 2026-10-21 (run 15, same-origin hosting)
 - **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -46,6 +46,7 @@ Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout 
 - D10: Catalog visibility rule, default anonymous limit `13+`, keyset pagination (ADR-0013).
 - D11: Frontend stack pins: ESLint 9, TypeScript 5.9, `@hookform/resolvers` 5 (v6 has a peer conflict), MSW 3 (`onUnhandledFrame`). Revisit when upstream catches up.
 - D12: Refresh-token reuse has a 10 s grace for retries (ADR-0014): fixes a real sign-out bug found by the browser tests.
+- D13: The API service also serves the built web app, one origin, no CORS in production (ADR-0015). Supersedes the Cloudflare Pages plan in ADR-0010.
 - D8: Cloudinary only for development and a tiny invite-only pilot; usage guard thresholds configurable, fails safe, no guarantee against charges (ADR-0011). Paid worker host and any paid plan need an approved budget; none selected.
 - D7: Video = Cloudinary Free (ADR-0011), replacing Mux for the pilot.
 - D4: Hosting = Render + Neon + owner-managed Redis (ADR-0010, accepted).
@@ -54,7 +55,7 @@ Sprint 1: auth module, `require_role`, auth tests, rate limiting, login lockout 
 
 ## Open questions (answerable in one line)
 
-0. Q12 (now proven, not theoretical): sessions need the frontend and API on the same site. My recommendation, because it costs nothing: serve the built frontend from the API service (same origin). Alternatives: a custom domain (needs customer approval) or a proxy. Which do you choose? Evidence and options: docs/research/browser-measurements.md.
+0. Q12 is decided: ADR-0015 serves the web app from the API service (one origin, $0). Tell me if you would rather buy a custom domain; the code supports both.
 
 1. Q9: Cloudinary Free allows roughly 3 hours of total SD viewing per month (ADR-0011). Keep the pilot invite-only and tiny, or ask the customer to fund a plan before public launch?
 2. Q10: Please confirm the Free plan's max upload size and streaming terms on your Cloudinary dashboard once the account exists (I could not verify them).
@@ -73,4 +74,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the e2e PR once its CI is green (the new `e2e` job runs for the first time there; expect to iterate on it). Then, depending on your answer to Q12, build the same-origin option. Sprint 2 (2026-11-18 start, but nothing blocks starting early): `VideoProvider` interface and media models, `LocalProvider` with a provider contract test, then `CloudinaryProvider` and the usage guard (ADR-0011). Adding `e2e` to the required checks needs your OK because it changes branch protection. No paid infrastructure is needed.
+Merge the same-origin PR once CI is green (the `e2e` job now runs in the production shape). Then Sprint 2: `VideoProvider` interface and media models, `LocalProvider` with a contract test every provider must pass, then `CloudinaryProvider` and the usage guard (ADR-0011). Open items for deployment: a "waking up" UI state for the free host's cold start, `TRUSTED_PROXY_COUNT` on Render, and a real mail provider (SMTP) for verification emails.

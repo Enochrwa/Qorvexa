@@ -118,10 +118,12 @@ jobs:
       JWT_SECRET: ci-secret-ci-secret-ci-secret-0123456789
       SMTP_HOST: localhost
       SMTP_PORT: "1025"
-      FRONTEND_URL: http://localhost:5173
-      CORS_ORIGINS: http://localhost:5173
+      # Production shape (ADR-0015): the API serves the built web app, one origin, no CORS.
+      FRONTEND_URL: http://localhost:8000
+      FRONTEND_DIST_DIR: ${{ github.workspace }}/frontend/dist
       TRUSTED_PROXY_COUNT: "1"
-      VITE_API_URL: http://localhost:8000
+      VITE_API_URL: ""
+      E2E_BASE_URL: http://localhost:8000
       E2E_ADMIN_EMAIL: e2e-admin@example.com
     steps:
       - uses: actions/checkout@v4
@@ -143,19 +145,15 @@ jobs:
           echo "E2E_ADMIN_PASSWORD=$pw" >> "$GITHUB_ENV"
           uv run alembic upgrade head
           SEED_ADMIN_EMAIL="$E2E_ADMIN_EMAIL" SEED_ADMIN_PASSWORD="$pw" uv run python -m app.cli.seed --sample
-      - name: Start the API
+      - name: Build the frontend (the API serves it)
+        working-directory: frontend
+        run: npm run build
+      - name: Start the API (also serves the web app)
         working-directory: backend
         run: |
           nohup uv run uvicorn app.main:app --port 8000 > "$RUNNER_TEMP/api.log" 2>&1 &
-          for i in $(seq 1 40); do curl -fs localhost:8000/ready >/dev/null && exit 0; sleep 1; done
+          for i in $(seq 1 40); do curl -fs localhost:8000/ready >/dev/null && curl -fs localhost:8000/ >/dev/null && exit 0; sleep 1; done
           cat "$RUNNER_TEMP/api.log"; exit 1
-      - name: Build and serve the frontend
-        working-directory: frontend
-        run: |
-          npm run build
-          nohup npx vite preview --port 5173 --strictPort --host localhost > "$RUNNER_TEMP/web.log" 2>&1 &
-          for i in $(seq 1 30); do curl -fs localhost:5173 >/dev/null && exit 0; sleep 1; done
-          cat "$RUNNER_TEMP/web.log"; exit 1
       - name: Install the browser
         working-directory: frontend
         run: npx playwright install --with-deps chromium

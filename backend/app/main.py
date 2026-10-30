@@ -8,6 +8,7 @@ from app.api.v1.router import api_router
 from app.core.config import get_settings
 from app.core.errors import install_error_handlers
 from app.core.logging import RequestContextMiddleware, configure_logging
+from app.core.spa import mount_frontend
 
 
 def create_app() -> FastAPI:
@@ -34,6 +35,8 @@ def create_app() -> FastAPI:
     install_error_handlers(app)
     app.include_router(health.router)
     app.include_router(api_router)
+    if settings.frontend_dist_dir:
+        mount_frontend(app, settings.frontend_dist_dir)  # last: API routes take precedence
     return app
 
 

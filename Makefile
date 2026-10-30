@@ -1,7 +1,7 @@
-.PHONY: help install up down backend-dev frontend-dev worker-dev migrate seed gen-api test lint fmt
+.PHONY: help install up down backend-dev frontend-dev worker-dev migrate seed serve gen-api test lint fmt
 
 help:
-	@echo "Targets: install up down backend-dev frontend-dev worker-dev migrate seed gen-api test lint fmt"
+	@echo "Targets: install up down backend-dev frontend-dev worker-dev migrate seed serve gen-api test lint fmt"
 
 install:
 	cd backend && uv sync
@@ -27,6 +27,10 @@ migrate:
 
 seed:  ## genres, admin from SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD, sample titles (dev only)
 	cd backend && uv run python -m app.cli.seed --sample
+
+serve:  ## production-like: build the web app and serve it from the API on http://localhost:8000
+	cd frontend && VITE_API_URL= npm run build
+	cd backend && FRONTEND_DIST_DIR=../frontend/dist FRONTEND_URL=http://localhost:8000 uv run uvicorn app.main:app --port 8000
 
 gen-api:  ## regenerate frontend API types from the backend OpenAPI schema
 	./scripts/gen-api.sh

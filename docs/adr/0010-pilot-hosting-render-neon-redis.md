@@ -10,7 +10,7 @@ Budget is $0 ([findings](../research/free-tier-findings.md), verified 2026-10-21
 
 ## Decision
 
-- API: Render free web service. Frontend: Cloudflare Pages (SPA only, never video).
+- API: Render free web service, which **also serves the web app** (one origin; see [ADR-0015](0015-serve-frontend-from-api.md), which supersedes the original plan of Cloudflare Pages for the frontend).
 - Postgres: Neon Free (0.5 GB, 100 CU-hours per month, scale to zero).
 - Redis: the owner provisions and manages a real Redis instance and supplies `REDIS_URL`. ARQ stays as the job system (ADR-0006). No Redis provider is chosen or paid for by this project.
 
