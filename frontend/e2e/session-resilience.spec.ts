@@ -44,7 +44,9 @@ test('reloading while the session is still being restored does not sign the user
   const user = await createVerifiedUser(request, 'quick-reload')
   await signIn(page, user.email, user.password)
   // Reload several times in quick succession, without waiting for the app to settle.
-  for (let i = 0; i < 4; i++) await page.reload({ waitUntil: 'commit' })
+  // (Chromium can refuse a reload that lands mid-navigation; that is the browser, not the app.)
+  for (let i = 0; i < 4; i++) await page.reload({ waitUntil: 'commit' }).catch(() => undefined)
+  await page.waitForLoadState('domcontentloaded')
   await page.reload()
   await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible()
 })

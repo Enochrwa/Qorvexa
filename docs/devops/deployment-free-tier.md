@@ -5,22 +5,27 @@
 ## Target topology (pilot)
 
 ```
-Cloudflare Pages (SPA)  ->  API host (FastAPI container, 1 instance)  ->  Managed Postgres (free tier)
-                                  |                                      Redis (free tier or optional)
-                                  +-> Video provider (Mux free plan or R2 + worker)
+Browser  ->  One Render web service (Docker image: FastAPI + the built web app)  ->  Neon Postgres (free)
+                       |                                                              Redis (owner-managed)
+                       +-> Video provider (Cloudinary on the free plan for development and a tiny pilot)
 ```
 
-## Frontend: Cloudflare Pages
+The web app and the API share one origin on purpose: the session cookie is not stored by browsers when they are on different sites ([ADR-0015](../adr/0015-serve-frontend-from-api.md), evidence in [browser-measurements](../research/browser-measurements.md)).
 
-- Connect the repo, build command `npm run build`, output `dist`, root `frontend`.
-- Set `VITE_API_URL`. Add SPA fallback via `_redirects` (`/* /index.html 200`).
-- Limits to remember: 500 builds per month on the free plan, 20,000 files and 25 MiB per asset per site. Do not host video here.
+## The service (web app + API)
 
-## API host
+- Image: `infra/docker/backend.Dockerfile` (builds the frontend, then the API; non-root; health check on `/health`). Or build natively: `cd frontend && VITE_API_URL= npm run build`, then start `uvicorn app.main:app` with `FRONTEND_DIST_DIR` pointing at `frontend/dist`.
+- Required environment (secrets in the host's secret manager, never in the repo):
+  `APP_ENV=production`, `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET` (random, 32+ characters), `COOKIE_SECURE=true`, `FRONTEND_URL` (the public https address, used in emails), `FRONTEND_DIST_DIR` (already set in the image), `TRUSTED_PROXY_COUNT` (see below), SMTP settings for a real mail provider.
+- `CORS_ORIGINS` is not needed (same origin). Leave it unset.
+- `TRUSTED_PROXY_COUNT`: set it to the number of proxies in front of the app (Render: probably 1) only after checking how the host appends `X-Forwarded-For`. Too low and everyone shares one rate-limit bucket; too high and clients can spoof their address.
+- Health check path `/health`; readiness `/ready` (database and Redis).
+- Free tiers sleep when idle. The first request after a pause waits for a cold start (reported at about a minute; not measured by us). Mitigations: a "waking up" state in the UI, and a keep-alive pinger only if the host's terms allow it.
+- One instance: `uvicorn --workers 1` (the in-process rate-limit fallback is per process).
 
-Requirements: container or Python runtime, env vars, HTTPS, health check. Expect cold starts on free tiers; mitigations: lightweight startup, keep-alive pinger only if the host's terms allow it, and a "waking up" UI state.
+## Alternative: app on a CDN, API elsewhere
 
-Dockerfile (to be added in Sprint 0): multi-stage, non-root user, `uvicorn --workers 1` (increase with plan), healthcheck on `/health`.
+Only works if both are on the **same site** (for example `app.example.com` and `api.example.com`), which needs a domain. Leave `FRONTEND_DIST_DIR` unset, set `CORS_ORIGINS` to the app's origin, build the app with `VITE_API_URL` set to the API's address. Cloudflare Pages notes: build command `npm run build`, output `dist`, root `frontend`, SPA fallback `/* /index.html 200`; 500 builds per month and 20,000 files on the free plan; never host video there.
 
 ## Database
 

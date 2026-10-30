@@ -11,6 +11,9 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     app_name: str = "Qorvexa"
+    # Directory of the built frontend. When set, the API also serves the single-page app, so the
+    # app and the API share one site (required for the session cookie, see ADR-0015).
+    frontend_dist_dir: str | None = None
     cors_origins: str = "http://localhost:5173"
     database_url: str = "postgresql+asyncpg://qorvexa:change-me@localhost:5432/qorvexa"
     redis_url: str = "redis://localhost:6379/0"

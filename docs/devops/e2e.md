@@ -14,12 +14,12 @@ Real browser (Playwright, Chromium) against the real stack: built frontend, API,
 
 ## Run it locally
 
-You need the stack running with these API settings (the rest are the usual `.env` values):
+The default is the production shape: the API serves the built web app on one origin (ADR-0015). Settings for the API (the rest are the usual `.env` values):
 
 ```
-TRUSTED_PROXY_COUNT=1       # each test presents its own client address (see below)
-CORS_ORIGINS=http://localhost:5173
-FRONTEND_URL=http://localhost:5173
+FRONTEND_DIST_DIR=../frontend/dist   # after: cd frontend && VITE_API_URL= npm run build
+FRONTEND_URL=http://localhost:8000
+TRUSTED_PROXY_COUNT=1                # each test presents its own client address (see below)
 SMTP_HOST=localhost SMTP_PORT=1025   # Mailpit
 ```
 
@@ -27,14 +27,16 @@ SMTP_HOST=localhost SMTP_PORT=1025   # Mailpit
 docker compose up -d                       # Postgres, Redis, Mailpit
 make migrate
 SEED_ADMIN_EMAIL=e2e-admin@example.com SEED_ADMIN_PASSWORD='<a long random value>' make seed
-make backend-dev                           # API on :8000
-cd frontend && VITE_API_URL=http://localhost:8000 npm run build && npx vite preview --port 5173 --strictPort
+(cd frontend && VITE_API_URL= npm run build)
+make backend-dev                           # API and web app on http://localhost:8000
+cd frontend
+export E2E_BASE_URL=http://localhost:8000
 export E2E_ADMIN_EMAIL=e2e-admin@example.com E2E_ADMIN_PASSWORD='<same value>'
 npx playwright install chromium           # once
 npm run e2e                                # or: npx playwright test --project=desktop e2e/auth.spec.ts
 ```
 
-The studio specs are skipped when `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are not set. Use `E2E_CHROMIUM_PATH=/path/to/chromium` to use an existing Chromium instead of Playwright's download. Other overrides: `E2E_BASE_URL`, `E2E_API_URL`, `MAILPIT_URL`.
+The studio specs are skipped when `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are not set. Use `E2E_CHROMIUM_PATH=/path/to/chromium` to use an existing Chromium instead of Playwright's download. Other overrides: `E2E_API_URL`, `MAILPIT_URL`. The old two-port development mode (Vite on 5173, API on 8000, `CORS_ORIGINS` set) still works: set `E2E_BASE_URL=http://localhost:5173`. Any Content-Security-Policy violation in the browser console fails a test.
 
 ## Why each test has its own client address
 
@@ -49,4 +51,4 @@ The API limits sign-ins and sign-ups per client address. One machine running the
 
 ## CI
 
-The `e2e` job in `.github/workflows/ci.yml` starts Postgres, Redis and Mailpit as service containers, seeds with a random admin password that exists only in that job, builds and serves the frontend, installs Chromium and runs the suite. On failure it uploads the Playwright report, traces, screenshots and the API log. It is informational until it has proved stable; then add it to the required checks (docs/devops/ci-cd.md).
+The `e2e` job in `.github/workflows/ci.yml` starts Postgres, Redis and Mailpit as service containers, seeds with a random admin password that exists only in that job, builds the frontend (served by the API, one origin), installs Chromium and runs the suite. On failure it uploads the Playwright report, traces, screenshots and the API log. It is informational until it has proved stable; then add it to the required checks (docs/devops/ci-cd.md).

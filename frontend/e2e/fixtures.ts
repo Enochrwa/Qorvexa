@@ -27,6 +27,16 @@ export async function newDevice(browser: Browser) {
 }
 
 export const test = base.extend<{ clientIp: string }>({
+  // A strict Content-Security-Policy (served with the app) must never block our own pages.
+  page: async ({ page }, use) => {
+    const violations: string[] = []
+    page.on('console', (m) => {
+      if (/Content Security Policy|Refused to (load|apply|execute|connect)/i.test(m.text()))
+        violations.push(m.text())
+    })
+    await use(page)
+    expect(violations, 'Content-Security-Policy violations in the browser console').toEqual([])
+  },
   clientIp: async ({}, use) => use(randomIp()),
   context: async ({ context, clientIp }, use) => {
     await isolate(context, clientIp)

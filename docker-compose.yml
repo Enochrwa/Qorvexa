@@ -40,6 +40,7 @@ services:
       - "8025:8025"
 
   # Optional full containerised stack: `docker compose --profile app up -d --build`
+  # The api image also serves the web app: open http://localhost:8000 (ADR-0015).
   api:
     profiles: ["app"]
     build:
@@ -55,6 +56,7 @@ services:
     ports:
       - "8000:8000"
 
+  # Optional: the app on its own (nginx), only useful with a custom domain shared with the API.
   web:
     profiles: ["app"]
     build:

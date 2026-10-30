@@ -18,3 +18,4 @@ We record significant decisions so future contributors know the context and trad
 | [0012](0012-maturity-scale.md) | Age-based maturity scale | Accepted (working default) |
 | [0013](0013-catalog-visibility-and-pagination.md) | Catalog visibility, default audience limit, keyset pagination | Accepted (working default) |
 | [0014](0014-refresh-reuse-grace.md) | Short grace period for refresh-token reuse | Accepted |
+| [0015](0015-serve-frontend-from-api.md) | Serve the web app from the API service (one origin) | Accepted (supersedes ADR-0010's frontend host) |
