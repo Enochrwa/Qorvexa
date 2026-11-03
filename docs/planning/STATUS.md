@@ -1,7 +1,7 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 15, same-origin hosting)
-- **Current sprint:** Sprint 0, Foundation (2026-10-21 to 2026-11-03)
+- **Last run:** 2026-10-21 (run 16, Sprint 2 media foundation)
+- **Current sprint:** Sprint 2, Upload and processing (planned 2026-11-18 to 2026-12-01; started early, Sprint 1 finished on 2026-10-23)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
 
@@ -74,4 +74,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the same-origin PR once CI is green (the `e2e` job now runs in the production shape). Then Sprint 2: `VideoProvider` interface and media models, `LocalProvider` with a contract test every provider must pass, then `CloudinaryProvider` and the usage guard (ADR-0011). Open items for deployment: a "waking up" UI state for the free host's cold start, `TRUSTED_PROXY_COUNT` on Render, and a real mail provider (SMTP) for verification emails.
+Merge the media-foundation PR when CI is green. Next in Sprint 2: `LocalProvider` part 1 (MinIO presigned multipart upload) and the upload endpoints (create session, complete, status, retry), then `CloudinaryProvider` with the usage guard. Still open from before: a "waking up" UI state for the free host's cold start, `TRUSTED_PROXY_COUNT` on Render, a real SMTP provider, and whether `e2e` becomes a required check (needs your OK).

@@ -26,7 +26,24 @@ class VideoProvider(Protocol):
 
 ## Asset state machine
 
-`created -> uploading -> uploaded -> processing -> ready -> published` with side exits `failed` and `deleted`. Transitions are idempotent and driven by provider webhooks, worker jobs or admin actions. A reconciliation job re-checks assets stuck in `uploading` or `processing` beyond a timeout.
+`created -> uploading -> uploaded -> processing -> ready`, with side exits `failed` and `deleted`. There is no `published` asset state: publishing belongs to the title or episode and is decided by the catalog visibility rule ([ADR-0013](../adr/0013-catalog-visibility-and-pagination.md)); an asset is simply `ready` or not.
+
+Code: `backend/app/modules/media/states.py` (pure functions) and `service.py`. The full transition table is the test `tests/unit/media/test_states.py`. Rules, because providers deliver events **at least once and out of order**:
+
+- Applying the status an asset already has, or an older one arriving late, is **ignored** (not an error).
+- A provider may skip steps (`created` straight to `ready`), but status never moves backwards.
+- `deleted` is terminal: a late event never resurrects it.
+- `failed` is reachable from any unfinished state, **not** from `ready` (that raises `InvalidTransition`; delete the asset instead). A `failed` asset recovers only if the provider later reports `ready` (provider truth wins if a timeout marked it failed too early).
+- Only a `failed` asset can be retried by an admin (back to `created`, new upload).
+- Status changes lock the asset row, so concurrent changes cannot both apply.
+
+### Provider events (webhooks)
+
+`service.ingest_event` processes each verified event **exactly once**. The unique key `(provider, event_id)` is the gate: the first insert wins, redeliveries (even concurrent ones) get `duplicate`. Recording the event and changing the asset share one transaction. Outcomes: `applied`, `ignored` (stale or repeated status), `no_status_change`, `duplicate`, `unknown_asset` (recorded, not an error), `rejected` (for example the vendor id contradicts the one already bound to the asset, or a ready asset is told it failed; recorded and logged). An event can only set a whitelisted set of fields (`duration_seconds`, `source_size_bytes`, `playback_id`, `renditions`, `thumbnails`, each validated); it cannot change the owner, provider or anything else. Stored payloads are capped at 8 KB.
+
+### Provider contract
+
+`provider.py` defines `VideoProvider`; `tests/contract/provider_contract.py` is the shared test suite every provider must pass (upload tickets, webhook verification against forged, tampered and hostile bodies, no playback before `ready`, HTTPS HLS URLs built from the playback id, idempotent delete). See [media providers](../backend/media-providers.md).
 
 ## Upload requirements
 

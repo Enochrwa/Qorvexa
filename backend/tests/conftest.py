@@ -33,6 +33,11 @@ class FakeEmailSender:
         return body.split("token=")[1].split()[0]
 
 
+_TRUNCATE = (
+    "TRUNCATE users, titles, genres, people, audit_log, media_assets, provider_events CASCADE"
+)
+
+
 @pytest.fixture
 def mailbox() -> FakeEmailSender:
     return FakeEmailSender()
@@ -93,7 +98,7 @@ async def db() -> AsyncIterator[AsyncSession]:
     engine = create_async_engine(get_settings().database_url, poolclass=NullPool)
     try:
         async with engine.connect() as conn:
-            await conn.execute(text("TRUNCATE users, titles, genres, people, audit_log CASCADE"))
+            await conn.execute(text(_TRUNCATE))
             await conn.commit()
     except OSError as exc:  # connection refused etc.
         await engine.dispose()
@@ -103,6 +108,6 @@ async def db() -> AsyncIterator[AsyncSession]:
     async with async_sessionmaker(engine, expire_on_commit=False)() as s:
         yield s
     async with engine.connect() as conn:
-        await conn.execute(text("TRUNCATE users, titles, genres, people, audit_log CASCADE"))
+        await conn.execute(text(_TRUNCATE))
         await conn.commit()
     await engine.dispose()
