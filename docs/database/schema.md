@@ -43,7 +43,7 @@ media_assets 1─* subtitle_tracks        media_assets 1─* upload_sessions
 ### Media
 | Table | Key columns |
 |---|---|
-| `media_assets` | owner_type (`movie|episode|trailer`), owner_id (not a foreign key: it points at a title or an episode depending on the type; one live asset per owner and type, enforced by a partial unique index), provider, provider_asset_id (unique per provider), provider, provider_asset_id, playback_id, status (`created|uploading|uploaded|processing|ready|failed|deleted`), failure_reason, duration_seconds, source_size_bytes, checksum, renditions jsonb, thumbnails jsonb |
+| `media_assets` | owner_type (`movie|episode|trailer`), owner_id (not a foreign key: it points at a title or an episode depending on the type; one live asset per owner and type, enforced by a partial unique index), provider, provider_asset_id (unique per provider), playback_id, status (`created|uploading|uploaded|processing|ready|failed|deleted`), failure_reason, duration_seconds, source_size_bytes, checksum, renditions jsonb, thumbnails jsonb |
 | `upload_sessions` | asset_id, uploader_id, provider_upload_id, expires_at, bytes_received, state |
 | `subtitle_tracks` | asset_id, language, label, format (`vtt`), url, is_default |
 | `audio_tracks` | asset_id, language, label, is_default |
