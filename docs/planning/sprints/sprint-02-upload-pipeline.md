@@ -7,12 +7,12 @@
 ## Tasks
 
 ### Backend
-- [ ] `VideoProvider` interface and `media_assets`, `upload_sessions`, `provider_events` models ([video-pipeline.md](../../architecture/video-pipeline.md)) (L)
+- [x] `VideoProvider` interface and `media_assets`, `upload_sessions`, `provider_events` models ([video-pipeline.md](../../architecture/video-pipeline.md)) (L)
 - [ ] `LocalProvider` part 1: MinIO multipart presigned upload (M)
 - [ ] `LocalProvider` part 2: FFmpeg HLS ladder job in the worker (L)
 - [ ] `CloudinaryProvider`: signed direct upload, notification webhook verification, state mapping (L) (ADR-0011; Mux is now optional)
 - [ ] Cloudinary usage guard: Admin API usage, thresholds configurable (default warn 70%, block uploads 90%), fail safe (block uploads) when usage is unavailable; build only if usage can be measured reliably; not a guarantee against charges (M) (ADR-0011)
-- [ ] Asset state machine with idempotent transitions (M)
+- [x] Asset state machine with idempotent transitions (M) (plus exactly-once event ingestion and a shared provider contract test suite)
 - [ ] ARQ worker setup; `reconcile_assets`, `cleanup_uploads` jobs (M)
 - [ ] Upload endpoints: create session, complete, status, retry (M)
 - [ ] `ffprobe` validation of the uploaded file (duration, codecs) (M)
@@ -42,6 +42,8 @@
 FFmpeg worker needs a host with enough CPU; for the pilot prefer Mux. Time-box the self-managed path to a working local proof of concept.
 
 ## Log
+
+- 2026-10-23: `VideoProvider` interface, media tables (migration 0006), state machine, exactly-once event ingestion, shared provider contract suite and an in-memory fake provider on branch `feat/media-provider`. 274 backend tests. Next: `LocalProvider`, then `CloudinaryProvider` and the usage guard.
 
 -
 

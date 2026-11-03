@@ -25,6 +25,7 @@ from app.core.db import Base  # noqa: E402
 from app.modules.audit import models as _audit_models  # noqa: E402, F401
 from app.modules.auth import models as _auth_models  # noqa: E402, F401
 from app.modules.catalog import models as _catalog_models  # noqa: E402, F401
+from app.modules.media import models as _media_models  # noqa: E402, F401
 from app.modules.profiles import models as _profile_models  # noqa: E402, F401
 
 config.set_main_option("sqlalchemy.url", get_settings().database_url)
