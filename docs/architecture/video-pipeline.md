@@ -45,6 +45,15 @@ Code: `backend/app/modules/media/states.py` (pure functions) and `service.py`. T
 
 `provider.py` defines `VideoProvider`; `tests/contract/provider_contract.py` is the shared test suite every provider must pass (upload tickets, webhook verification against forged, tampered and hostile bodies, no playback before `ready`, HTTPS HLS URLs built from the playback id, idempotent delete). See [media providers](../backend/media-providers.md).
 
+## Upload flow (as built)
+
+1. An editor starts an upload for a movie title or an episode (`POST /admin/titles/{id}/video`, `/admin/episodes/{id}/video`). The API checks the owner, the file name (plain name, one of `.mp4 .m4v .mov .mkv .webm`) and size (`MAX_UPLOAD_BYTES`, default 2 GB), creates the asset and an upload session, and asks the provider for an **upload ticket**. If the provider fails, nothing is saved (502).
+2. The **browser sends the file straight to the provider** with the ticket. The bytes never pass through the API.
+3. The browser calls `complete` (optional hint, safe to repeat). The provider's webhook is authoritative from here: `POST /webhooks/{provider}` verifies the signature, then `ingest_event` applies it exactly once (see above).
+4. When the asset is `ready`, its playback id and duration are stored. If it fails, the editor sees the reason and can retry (a fresh ticket; the old link is aborted). Deleting hides the asset immediately and tells the provider; if the vendor is down a cleanup job retries later.
+
+Only one live video per movie or episode; replacing means deleting first.
+
 ## Upload requirements
 
 - Direct to storage/provider; API never receives the file.

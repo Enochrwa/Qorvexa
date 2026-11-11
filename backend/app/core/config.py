@@ -11,6 +11,11 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     app_name: str = "Qorvexa"
+    # Which video provider handles uploads and playback: "fake" (tests and local work),
+    # later "local" and "cloudinary". "fake" is refused in production.
+    video_provider: str = "fake"
+    max_upload_bytes: int = 2 * 1024**3
+    webhook_max_bytes: int = 256 * 1024
     # Directory of the built frontend. When set, the API also serves the single-page app, so the
     # app and the API share one site (required for the session cookie, see ADR-0015).
     frontend_dist_dir: str | None = None
@@ -44,6 +49,8 @@ class Settings(BaseSettings):
             or len(self.jwt_secret) < 32
         ):
             raise ValueError("JWT_SECRET must be set to a random value of 32+ characters")
+        if self.app_env == "production" and self.video_provider == "fake":
+            raise ValueError("VIDEO_PROVIDER must be a real provider in production")
         if self.app_env == "production" and not self.cookie_secure:
             raise ValueError("COOKIE_SECURE must be true in production")
         return self

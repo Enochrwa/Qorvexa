@@ -72,10 +72,14 @@ Auth column: `-` public, `V` viewer, `E` editor, `A` admin, `P` profile-scoped (
 | GET/POST | /admin/seasons/{id}/episodes | E | List / create episode |
 | POST | /admin/seasons/{id}/episodes/reorder | E | Renumber episodes 1..n from an ordered id list (atomic) |
 | PATCH/DELETE | /admin/episodes/{id} | E | Update (incl. `status`) / delete episode |
-| POST | /admin/media/uploads | E | Create upload session |
-| POST | /admin/media/uploads/{id}/complete | E | Mark upload complete |
-| GET | /admin/media/assets/{id} | E | Status and details |
-| POST | /admin/media/assets/{id}/retry | E | Retry processing |
+| POST | /admin/titles/{id}/video | E | Start a movie upload (201). Body: `filename`, `size_bytes`. Returns where the **browser** sends the file (URL, method, headers or form fields, expiry, part size). 409 for a series or if a live video exists; 413 over `MAX_UPLOAD_BYTES`; 502 if the video service is down; 503 if none is configured |
+| POST | /admin/episodes/{id}/video | E | Start an episode upload (same shape) |
+| GET | /admin/titles/{id}/video, /admin/episodes/{id}/video | E | The live video of that owner (404 if none) |
+| GET | /admin/assets/{id} | E | Status (`created`, `uploading`, `uploaded`, `processing`, `ready`, `failed`, `deleted`), failure reason, duration, renditions |
+| POST | /admin/assets/{id}/complete | E | The browser says the upload finished; moves to `uploaded`. Safe to repeat; never moves a finished asset backwards; 409 if failed or deleted |
+| POST | /admin/assets/{id}/retry | E | Only for `failed` assets (409 otherwise). Body as for starting; returns a fresh upload ticket and kills the old link |
+| DELETE | /admin/assets/{id} | E | Delete (204, idempotent). The asset is hidden at once even if the vendor is unreachable |
+| POST | /webhooks/{provider} | - (signature) | Vendor notifications. Only the configured provider's name is accepted (else 404). Signature is verified before the body is trusted (400 if invalid or malformed); valid events are acknowledged with 200 and `{"result": "applied|ignored|duplicate|unknown_asset|rejected|no_status_change"}` so the vendor stops retrying. Bodies over 256 KB are 413; 600 per minute per address |
 | POST | /admin/media/assets/{id}/subtitles | E | Add subtitle track |
 | GET | /admin/analytics/overview | A | KPIs |
 | GET | /admin/analytics/titles | A | Per-title stats |

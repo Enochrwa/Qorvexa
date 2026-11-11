@@ -36,6 +36,16 @@ class TooManyRequests(DomainError):
         self.retry_after = max(1, retry_after)
 
 
+class PayloadTooLarge(DomainError):
+    status = 413
+    title = "Payload too large"
+
+
+class BadGateway(DomainError):
+    status = 502
+    title = "Upstream service unavailable"
+
+
 class Conflict(DomainError):
     status = 409
     title = "Conflict"

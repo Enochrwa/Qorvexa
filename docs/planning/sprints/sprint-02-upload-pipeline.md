@@ -14,7 +14,8 @@
 - [ ] Cloudinary usage guard: Admin API usage, thresholds configurable (default warn 70%, block uploads 90%), fail safe (block uploads) when usage is unavailable; build only if usage can be measured reliably; not a guarantee against charges (M) (ADR-0011)
 - [x] Asset state machine with idempotent transitions (M) (plus exactly-once event ingestion and a shared provider contract test suite)
 - [ ] ARQ worker setup; `reconcile_assets`, `cleanup_uploads` jobs (M)
-- [ ] Upload endpoints: create session, complete, status, retry (M)
+- [x] Upload endpoints: start, complete, status, retry, delete (M) (provider-neutral, tested with the fake provider)
+- [x] Webhook receiver: signature verified by the provider, exactly-once ingestion, size and rate limits (M)
 - [ ] `ffprobe` validation of the uploaded file (duration, codecs) (M)
 - [ ] Poster and thumbnail generation (M)
 - [ ] Subtitle upload (SRT -> VTT) (M)
@@ -42,6 +43,8 @@
 FFmpeg worker needs a host with enough CPU; for the pilot prefer Mux. Time-box the self-managed path to a working local proof of concept.
 
 ## Log
+
+- 2026-10-23: Upload endpoints and the webhook receiver on branch `feat/upload-endpoints` (provider-neutral; admin operations 16 to 24). The sandbox was reset mid-session; everything had already been merged, so only this branch was redone. Next: CloudinaryProvider and the usage guard, then LocalProvider.
 
 - 2026-10-23: `VideoProvider` interface, media tables (migration 0006), state machine, exactly-once event ingestion, shared provider contract suite and an in-memory fake provider on branch `feat/media-provider`. 274 backend tests. Next: `LocalProvider`, then `CloudinaryProvider` and the usage guard.
 
