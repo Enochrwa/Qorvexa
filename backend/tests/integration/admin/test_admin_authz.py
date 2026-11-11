@@ -33,7 +33,7 @@ async def test_every_admin_route_requires_an_editor(
 ) -> None:
     routes = _admin_routes()
     # Pinned on purpose: adding or removing an admin route must update this number deliberately.
-    assert len(routes) == 16
+    assert len(routes) == 24
     viewer = await as_role(client, mailbox, db, "viewer")
     for method, path in routes:
         assert await _call(client, method, path, None) == 401, (method, path)

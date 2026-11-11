@@ -91,6 +91,7 @@ async def test_samples_refuse_to_run_in_production(
     monkeypatch.setenv("APP_ENV", "production")
     monkeypatch.setenv("JWT_SECRET", "x" * 40)
     monkeypatch.setenv("COOKIE_SECURE", "true")
+    monkeypatch.setenv("VIDEO_PROVIDER", "cloudinary")
     get_settings.cache_clear()
     try:
         with pytest.raises(SystemExit, match="production"):

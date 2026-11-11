@@ -1,6 +1,6 @@
 # Status
 
-- **Last run:** 2026-10-21 (run 16, Sprint 2 media foundation)
+- **Last run:** 2026-10-21 (run 17, upload endpoints)
 - **Current sprint:** Sprint 2, Upload and processing (planned 2026-11-18 to 2026-12-01; started early, Sprint 1 finished on 2026-10-23)
 - **Phase 1:** done 2026-10-21 (one caveat below)
 - **Branch:** `chore/phase-1-foundation`
@@ -74,4 +74,4 @@ Resolved 2026-10-21: license (ADR-0009), hosting (ADR-0010), video provider = Cl
 
 ## Next action
 
-Merge the media-foundation PR when CI is green. Next in Sprint 2: `LocalProvider` part 1 (MinIO presigned multipart upload) and the upload endpoints (create session, complete, status, retry), then `CloudinaryProvider` with the usage guard. Still open from before: a "waking up" UI state for the free host's cold start, `TRUSTED_PROXY_COUNT` on Render, a real SMTP provider, and whether `e2e` becomes a required check (needs your OK).
+Merge the upload-endpoints PR when CI is green. Then `CloudinaryProvider` (signed direct upload, webhook signature, HLS playback URL) with its contract tests and the usage guard (ADR-0011). Before writing it I will verify Cloudinary's current signing rules and free-plan upload limit from its documentation, because I cannot test against a real account without your credentials (environment variables only, never in chat). Then the studio's upload UI. Still open: a "waking up" UI state for the free host's cold start, `TRUSTED_PROXY_COUNT` on Render, a real SMTP provider, and whether `e2e` becomes a required check (needs your OK).

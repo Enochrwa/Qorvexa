@@ -46,3 +46,8 @@ Signed URLs limit who can fetch media links and for how long; DRM adds playback 
 3. If it reached git history, rotate anyway (history rewriting does not un-leak it), and consider cleaning history.
 4. Review provider audit logs for misuse.
 5. Record the incident and the fix.
+
+## Provider webhooks
+
+- Public endpoint, so authenticity comes only from the provider verifying the vendor's signature **before** anything in the body is used. Forged, tampered and malformed bodies get 400 and change nothing (contract-tested for every provider).
+- Only the configured provider's webhook exists; duplicates are processed once; events can only set whitelisted, validated fields; bodies are capped (256 KB) and each address is limited (600 per minute).

@@ -64,8 +64,18 @@ def test_password_policy() -> None:
 
 def test_production_requires_real_secrets() -> None:
     get_settings.cache_clear()
+    real = {"video_provider": "cloudinary"}
     with pytest.raises(ValidationError):
-        Settings(app_env="production", jwt_secret="dev-only-change-me", cookie_secure=True)
+        Settings(app_env="production", jwt_secret="dev-only-change-me", cookie_secure=True, **real)
     with pytest.raises(ValidationError):
-        Settings(app_env="production", jwt_secret="x" * 40, cookie_secure=False)
-    assert Settings(app_env="production", jwt_secret="x" * 40, cookie_secure=True)
+        Settings(app_env="production", jwt_secret="x" * 40, cookie_secure=False, **real)
+    assert Settings(app_env="production", jwt_secret="x" * 40, cookie_secure=True, **real)
+
+
+def test_production_refuses_the_fake_video_provider() -> None:
+    with pytest.raises(ValidationError, match="VIDEO_PROVIDER"):
+        Settings(
+            app_env="production", jwt_secret="x" * 40, cookie_secure=True, video_provider="fake"
+        )
+    # development and tests may use it
+    assert Settings(app_env="development", video_provider="fake").video_provider == "fake"
